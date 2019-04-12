@@ -1,3 +1,11 @@
 __pycache__
 env
 .vscode
+_build
+*.pyc
+.cache
+testcoverage.rst
+.idea
+dist
+*.egg-info
+build
