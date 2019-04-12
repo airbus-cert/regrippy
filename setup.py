@@ -29,11 +29,11 @@ def generate_entry_points():
 
 setup(
     name='regrippy',
-    version="1.0.0",
+    version="1.0.1",
     description="A modern Python-3-based alternative to RegRipper",
     long_description="""RegRip**py** is a framework for reading and extracting useful forensics data from Windows registry hives. It is an alternative to [RegRipper](https://github.com/keydet89/RegRipper2.8) developed in modern Python 3. It makes use of William Ballenthin's [python-registry](https://github.com/williballenthin/python-registry) to access the raw registry hives.
 
-The goal of this project is to fix the little issues I had with the original RegRipper while also making it easier to develop your own plugins.
+The goal of this project is to provide a framework for quickly and easily developing your own plugins in an incident response scenario.
 
 By default, the script will look for the various hives by reading the `REG_SYSTEM`, `REG_SOFTWARE`, `REG_SAM`, `REG_NTUSER` and `REG_USRCLASS` environment variables. This allows the analyst to simply `export` these in their current shell session and not have to worry about specifying them every time they invoke the script.
 Alternatively, you can use the `--root` switch to specify the path to the root of the `C:` drive. RegRippy will automatically look into the right places depending on which hive each plugin needs.
