@@ -1,0 +1,245 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>regrippy &#8212; RegRippy 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RegRippy 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for regrippy</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">Registry</span> <span class="k">import</span> <span class="n">Registry</span>
+
+
+<div class="viewcode-block" id="mactime"><a class="viewcode-back" href="../regrip.html#regrippy.mactime">[docs]</a><span class="k">def</span> <span class="nf">mactime</span><span class="p">(</span><span class="n">md5</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">inode</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mode_as_string</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">uid</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">gid</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">atime</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mtime</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ctime</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">btime</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Formats and returns a Bodyfile-format line.</span>
+<span class="sd">    All parameters are optional</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">md5</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">inode</span><span class="p">),</span> <span class="n">mode_as_string</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">uid</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">gid</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">size</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">atime</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">mtime</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">ctime</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">btime</span><span class="p">)])</span></div>
+
+
+<div class="viewcode-block" id="BasePlugin"><a class="viewcode-back" href="../regrip.html#regrippy.BasePlugin">[docs]</a><span class="k">class</span> <span class="nc">BasePlugin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for all plugins. Provides several methods that can be used by plugins</span>
+<span class="sd">    to perform common actions, like opening registry keys.</span>
+
+<span class="sd">    :cvar str_or_list __REGHIVE__: The registry hive (or list thereof) you plugin works on</span>
+
+<span class="sd">    :ivar Registry.Registry reg: a handle to a Registry hive</span>
+<span class="sd">    :ivar logging.Logger logger: a preconfigured Logger. Use the :func:`~BasePlugin.info`, :func:`~BasePlugin.warning` and :func:`~BasePlugin.error` methods instead.</span>
+<span class="sd">    :ivar str hive_name: the name of the hive. It will always be one of the values in `__REGHIVE__` (see :doc:`createplugin`)</span>
+<span class="sd">    :ivar str hive_path: the full path to the hive file. Can be &quot;-&quot; if the hive was loaded from `stdin`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reg</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">hive_name</span><span class="p">,</span> <span class="n">hive_path</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reg</span> <span class="o">=</span> <span class="n">reg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hive_name</span> <span class="o">=</span> <span class="n">hive_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hive_path</span> <span class="o">=</span> <span class="n">hive_path</span>
+
+<div class="viewcode-block" id="BasePlugin.run"><a class="viewcode-back" href="../regrip.html#regrippy.BasePlugin.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Main entry point of the plugin&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;run() needs to be overriden&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BasePlugin.open_key"><a class="viewcode-back" href="../regrip.html#regrippy.BasePlugin.open_key">[docs]</a>    <span class="k">def</span> <span class="nf">open_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Opens and returns a registry key</span>
+
+<span class="sd">        :param path: the full path to a registry key</span>
+<span class="sd">        :type path: str</span>
+
+<span class="sd">        :returns: the key if it was found, otherwise `None`</span>
+<span class="sd">        :rtype: Registry.RegistryKey</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">key</span>
+        <span class="k">except</span> <span class="n">Registry</span><span class="o">.</span><span class="n">RegistryKeyNotFoundException</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Could not open key &quot;</span> <span class="o">+</span> <span class="n">path</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="BasePlugin.get_currentcontrolset_path"><a class="viewcode-back" href="../regrip.html#regrippy.BasePlugin.get_currentcontrolset_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_currentcontrolset_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetches the path to CurrentControlSet</span>
+
+<span class="sd">        :returns: the path to the `CurrentControlSet` key, or `None` if an error happened</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">select_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">open_key</span><span class="p">(</span><span class="s2">&quot;Select&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">select_key</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">current</span> <span class="o">=</span> <span class="n">select_key</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="s2">&quot;Current&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+        <span class="n">ccs_keyname</span> <span class="o">=</span> <span class="s2">&quot;ControlSet00&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ccs_keyname</span></div>
+
+<div class="viewcode-block" id="BasePlugin.guess_username"><a class="viewcode-back" href="../regrip.html#regrippy.BasePlugin.guess_username">[docs]</a>    <span class="k">def</span> <span class="nf">guess_username</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Tries to guess the user the current NTUSER.DAT hive corresponds to</span>
+
+<span class="sd">        :param default: what to return in case we couldn&#39;t determine the user name</span>
+<span class="sd">        :type default: any type</span>
+
+<span class="sd">        :returns: the user name, or `default` if it wasn&#39;t found</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Given the following path to a hive</span>
+        <span class="c1"># /mnt/c/Users/JohnDoe/NTUSER.DAT</span>
+        <span class="c1">#              ^^^^^^^</span>
+        <span class="c1">#               we want this part</span>
+
+        <span class="n">dirname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hive_path</span><span class="p">)</span>  <span class="c1"># /mnt/c/Users/JohnDoe</span>
+        <span class="n">folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">dirname</span><span class="p">)</span>  <span class="c1"># JohnDoe</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">folder</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">default</span>
+        <span class="k">return</span> <span class="n">folder</span></div>
+
+<div class="viewcode-block" id="BasePlugin.display_human"><a class="viewcode-back" href="../regrip.html#regrippy.BasePlugin.display_human">[docs]</a>    <span class="k">def</span> <span class="nf">display_human</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Displays a result to a human. By default,</span>
+<span class="sd">        it display the path and value of the result.</span>
+
+<span class="sd">        :param result: the result to display</span>
+<span class="sd">        :type result: regrip.PluginResult</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;=&gt;&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">value_name</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;[</span><span class="si">{result.value_data}</span><span class="s2">]&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BasePlugin.display_machine"><a class="viewcode-back" href="../regrip.html#regrippy.BasePlugin.display_machine">[docs]</a>    <span class="k">def</span> <span class="nf">display_machine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Displays a result for further processing by</span>
+<span class="sd">        a machine (piping into mactime for example).</span>
+
+<span class="sd">        :param result: the result to display</span>
+<span class="sd">        :type result: regrip.PluginResult</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">mactime</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">mtime</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">mtime</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="BasePlugin.warning"><a class="viewcode-back" href="../regrip.html#regrippy.BasePlugin.warning">[docs]</a>    <span class="k">def</span> <span class="nf">warning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Logs a message at WARNING level&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BasePlugin.error"><a class="viewcode-back" href="../regrip.html#regrippy.BasePlugin.error">[docs]</a>    <span class="k">def</span> <span class="nf">error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Logs a message at ERROR level&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BasePlugin.info"><a class="viewcode-back" href="../regrip.html#regrippy.BasePlugin.info">[docs]</a>    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Logs a message at INFO level&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="PluginResult"><a class="viewcode-back" href="../regrip.html#regrippy.PluginResult">[docs]</a><span class="k">class</span> <span class="nc">PluginResult</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A class which holds a single result of a plugin execution</span>
+
+<span class="sd">    :ivar dict custom: a `dict` you can use to store custom data for your result</span>
+<span class="sd">    :ivar int mtime: the &quot;last-modified&quot; time. Automatically set if you pass the `key` parameter.</span>
+<span class="sd">    :ivar int atime: the &quot;last-accessed&quot; time.</span>
+<span class="sd">    :ivar int ctime: the &quot;last-changed&quot; time.</span>
+<span class="sd">    :ivar int btime&quot;: the &quot;created&quot; time.</span>
+<span class="sd">    :ivar str path: complete path to the key. Automatically set if you pass the `key` parameter.</span>
+<span class="sd">    :ivar str key_name: last part of the key path. Automatically set if you pass the `key` parameter</span>
+<span class="sd">    :ivar str value_type: the value type</span>
+<span class="sd">    :ivar str value_name: the name of the Value</span>
+<span class="sd">    :ivar value_data: the actual value data. The variable type depends on the type of the value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_key</span> <span class="o">=</span> <span class="n">key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">custom</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mtime</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atime</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ctime</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btime</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value_type</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value_data</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">key</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">path</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mtime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">key_name</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value_name</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value_type</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">value_type_str</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value_data</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">value</span><span class="p">()</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RegRippy 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Airbus CERT.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+    </div>
+  </body>
+</html>

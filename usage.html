@@ -1,0 +1,192 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Using RegRippy for Incident Response &#8212; RegRippy 0.1 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Creating a plugin" href="createplugin.html" />
+    <link rel="prev" title="Welcome to RegRippy’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="createplugin.html" title="Creating a plugin"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to RegRippy’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">RegRippy 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="using-regrippy-for-incident-response">
+<h1>Using RegRippy for Incident Response<a class="headerlink" href="#using-regrippy-for-incident-response" title="Permalink to this headline">¶</a></h1>
+<p>RegRippy’s focus is ease-of-use during incident response scenarios. Its goal is to get out of
+of the way as much as possible, and to provide you with the answers you need right away whenever
+possible.</p>
+<p>To this end, you don’t need a lot to start using it:</p>
+<ul class="simple">
+<li>You’ll need a <strong>Windows Registry hive</strong> to work on. A mounted disk dump is ideal, but RegRippy can
+also work on a single isolated hive file.</li>
+<li>You will have to choose <strong>which plugin</strong> you want to run. Depending on the plugin, the hive you
+need can be different.</li>
+</ul>
+<div class="section" id="choosing-the-plugin">
+<h2>Choosing the plugin<a class="headerlink" href="#choosing-the-plugin" title="Permalink to this headline">¶</a></h2>
+<p>You can get a look at every plugin available in RegRippy by running:</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>$ regrip.py -l
+</pre></div>
+</div>
+<p>The plugin are presented, one per line, in the following fashion:</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>- plugin_name <span class="o">(</span>hive<span class="o">)</span>: description
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">plugin_name</span></code> is what you will be using to call this plugin’s services. The <code class="docutils literal"><span class="pre">hive</span></code> is the
+type of Registry hive the plugin expects in input. Finally, the <code class="docutils literal"><span class="pre">description</span></code> gives you a
+one-line description of what this plugin does.</p>
+<p>Calling the plugin can be done in one of two ways:</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>$ regrip.py <span class="o">[</span>options<span class="o">]</span> plugin_name
+$ reg_pluginname <span class="o">[</span>options<span class="o">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="selecting-the-hive">
+<h2>Selecting the hive<a class="headerlink" href="#selecting-the-hive" title="Permalink to this headline">¶</a></h2>
+<p>Before the plugin can do its magic, you need to specify where your hive file(s) is located.
+There are three ways you can do this (and they will be checked in this order):</p>
+<ol class="arabic simple">
+<li>By directly specifying the path to the hive file. You can use the special path “<cite>-</cite>” which
+means “read from <cite>stdin</cite>”.</li>
+</ol>
+<blockquote>
+<div><div class="highlight-shell"><div class="highlight"><pre><span></span>--system <span class="o">(</span>or -y<span class="o">)</span> /path/to/SYSTEM
+--software <span class="o">(</span>or -o<span class="o">)</span> /path/to/SOFTWARE
+--sam <span class="o">(</span>or -a<span class="o">)</span> /path/to/SAM
+--ntuser <span class="o">(</span>or -n<span class="o">)</span> /path/to/NTUSER.DAT
+--usrclass <span class="o">(</span>or -u<span class="o">)</span> /path/to/UsrClass.DAT
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li>By specifying the path to the folder where <code class="docutils literal"><span class="pre">C:</span></code> is mounted. RegRippy will automatically
+fetch the correct hive(s), provided they are in the right spot. <strong>This is the easiest way to
+use RegRippy</strong></li>
+</ol>
+<blockquote>
+<div><div class="highlight-shell"><div class="highlight"><pre><span></span>--root <span class="o">(</span>or -r<span class="o">)</span> /path/to/C
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="3">
+<li>By creating environment variable which contain the path to each hive:</li>
+</ol>
+<blockquote>
+<div><div class="highlight-shell"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">REG_SYSTEM</span><span class="o">=</span>/path/to/SYSTEM
+<span class="nb">export</span> <span class="nv">REG_SOFTWARE</span><span class="o">=</span>/path/to/SOFTWARE
+<span class="nb">export</span> <span class="nv">REG_SAM</span><span class="o">=</span>/path/to/SAM
+<span class="nb">export</span> <span class="nv">REG_NTUSER</span><span class="o">=</span>/path/to/NTUSER.DAT
+<span class="nb">export</span> <span class="nv">REG_USRCLASS</span><span class="o">=</span>/path/to/UsrClass.DAT
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="usage-examples">
+<h2>Usage examples<a class="headerlink" href="#usage-examples" title="Permalink to this headline">¶</a></h2>
+<p>Quick findings: get the name of the computer you’re analysing</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>$ mount /dev/sdb1 /mnt/c
+$ reg_compname --root /mnt/c
+DESKTOP_ABCEDF
+</pre></div>
+</div>
+<p>Quick findings: extract all programs running at startup, both computer-wide (<cite>SOFTWARE</cite> hive)
+and per-user (<cite>NTUSER.DAT</cite> hive)</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>$ reg_run --root /mnt/c --all-user-hives
+<span class="c1"># You can add the -v (--verbose) flag to enable more logging, and get the user&#39;s name</span>
+<span class="c1"># when something is found in NTUSER</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to RegRippy’s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="createplugin.html"
+                        title="next chapter">Creating a plugin</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="createplugin.html" title="Creating a plugin"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to RegRippy’s documentation!"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">RegRippy 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Airbus CERT.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+    </div>
+  </body>
+</html>
