@@ -16,7 +16,7 @@ def mock_reg():
     return reg
 
 
-def test_timezone(mock_reg):
+def test_lastshutdown(mock_reg):
     p = plugin(mock_reg, LoggerMock(), "SYSTEM", "-")
 
     results = list(p.run())
