@@ -1,6 +1,6 @@
-# Plugin written by Tim Taylor, timtaylor3@yahoo.com
 import struct
 from datetime import datetime
+from Registry import Registry
 from Registry.RegistryParse import parse_windows_timestamp
 from regrippy import BasePlugin, PluginResult, mactime
 
@@ -38,7 +38,6 @@ class Plugin(BasePlugin):
                     binary = struct.unpack('<Q', v.value())[0]
                     dt = parse_windows_timestamp(binary)
                     last_shutdown = dt.isoformat('T') + 'Z'
-                    res = PluginResult(key=key, value=v)
                     res.custom['value'] = "Last Shutdown Time:\t{0}".format(last_shutdown)
                     yield res
 
@@ -74,19 +73,17 @@ class Plugin(BasePlugin):
 
                     for entry in key2.values():
                         if entry.name() == "IPAddress":
+                            '''This bit has not been tested'''
                             res = PluginResult(key=key, value=entry)
-                            ip_address = entry.value()
-                            if ip_address != '':
-                                res.custom['value'] = "IP Address:\t\t{0}".format(ip_address)
-                                yield res
+                            ip_address = entry.value()[0]
+                            res.custom['value'] = "IP Address:\t\t{0}".format(ip_address)
+                            yield res
 
                         if entry.name() == "DhcpIPAddress":
                             res = PluginResult(key=key, value=entry)
                             ip_address = entry.value()
                             res.custom['value'] = "IP Address:\t\t{0}".format(ip_address)
-                            if ip_address != '':
-                                res.custom['value'] = "IP Address:\t\t{0}".format(ip_address)
-                                yield res
+                            yield res
 
     def display_human(self, result):
         print("{0}".format(result.custom["value"]))
