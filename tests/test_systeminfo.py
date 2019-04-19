@@ -30,45 +30,47 @@ def mock_software():
 
 
 @pytest.fixture
-def mock_system():
-    key = RegistryKeyMock.build("ControlSet001")
+def mock_hostname():
+    key = RegistryKeyMock.build("ControlSet001\\Control\\ComputerName\\ComputerName")
+    reg = RegistryMock("SYSTEM", "system", key.root())
+    reg.set_ccs(1)
+    val = RegistryValueMock("ComputerName", "TestPC", RegSZ)
+    key.add_value(val)
+    return reg
+
+@pytest.fixture
+def mock_shutdowntime():
+    key = RegistryKeyMock.build("ControlSet001\\Control\\Windows")
+    reg = RegistryMock("SYSTEM", "system", key.root())
+    reg.set_ccs(1)
+    key.add_child('ShutdownTime')
+    val = RegistryValueMock("ShutdownTime", b'\xe40\xa5!\xed\xf7\xd3\x01', RegBin)
+    key.add_value(val)
+    return reg
+
+
+@pytest.fixture
+def mock_interfaces():
+    key = RegistryKeyMock.build("ControlSet001\\Services\\Tcpip\\Parameters\Interfaces")
     reg = RegistryMock("SYSTEM", "system", key.root())
     reg.set_ccs(1)
 
-    key_control = RegistryKeyMock("Control", key)
-    key.add_child(key_control)
+    key.add_child("{456A6A17D-21FC-123F-A689-A846D86EC008}")
+    key_interface1 = reg.open("ControlSet001\\Services\\Tcpip\\Parameters\\Interfaces\\{456A6A17D-21FC-123F-A689-A846D86EC008}")
+    key_interface1.add_child('DhcpIPAddress')
+    val1 = RegistryValueMock('DhcpIPAddress', '127.0.0.1', RegSZ)
+    key_interface1.add_value(val1)
 
-    key_hostname = RegistryKeyMock("ComputerName\\ComputerName", key)
-    key_shutdown = RegistryKeyMock("Windows\\ShutdownTime", key)
-
-    key.add_child(key_hostname)
-    key.add_child(key_shutdown)
-
-    val1 = RegistryValueMock(key_hostname, "SomeTestPCName", RegSZ)
-    val2 = RegistryValueMock(key_shutdown, b'\xe40\xa5!\xed\xf7\xd3\x01', RegBin)
-
-    key.add_value(val1)
-    key.add_value(val2)
-
-    key_interface = RegistryKeyMock("Services\\Tcpip\\Parameters\\Interfaces\\", key)
-    key.add_child(key_interface)
-
-    key_dhcp_ipaddress = RegistryKeyMock("{456A6A17D-21FC-123F-A689-A846D86EC008}\\DhcpIPAddress", key_interface)
-    key_ip_address = RegistryKeyMock("{123ee342-7039-466e-9d20-806e6f6e6963}\\IPAddress", key_interface)
-
-    key.add_child(key_dhcp_ipaddress)
-    key.add_child(key_ip_address)
-
-    val3 = RegistryValueMock(key_dhcp_ipaddress, '127.0.0.1', RegSZ)
-    val4 = RegistryValueMock(key_ip_address, '127.0.0.2', RegSZ)
-
-    key.add_value(val3)
-    key.add_value(val4)
+    key.add_child("{123ee342-7039-466e-9d20-806e6f6e6963}")
+    key_interface2 = reg.open("ControlSet001\\Services\\Tcpip\\Parameters\\Interfaces\\{123ee342-7039-466e-9d20-806e6f6e6963}")
+    key_interface2.add_child('IPAddress')
+    val2 = RegistryValueMock('IPAddress', '127.0.0.2', RegSZ)
+    key_interface2.add_value(val2)
 
     return reg
 
 
-def test_run(mock_system, mock_software ):
+def test_run(mock_software, mock_hostname, mock_shutdowntime, mock_interfaces):
     # SOFTWARE
     p = plugin(mock_software, LoggerMock(), "SOFTWARE", "-")
     results = list(p.run())
@@ -76,8 +78,15 @@ def test_run(mock_system, mock_software ):
     assert (len(results) == 3), "There should be  3 results."
 
     # SYSTEM
-    p = plugin(mock_system, LoggerMock(), "SYSTEM", "-")
+    p = plugin(mock_hostname, LoggerMock(), "SYSTEM", "-")
     results = list(p.run())
+    assert (len(results) == 1), "There should be 1 results"
 
-    assert (len(results) == 4), "There should be 4 results"
+    p = plugin(mock_shutdowntime, LoggerMock(), "SYSTEM", "-")
+    results = list(p.run())
+    assert (len(results) == 1), "There should be 1 results"
+
+    p = plugin(mock_interfaces, LoggerMock(), "SYSTEM", "-")
+    results = list(p.run())
+    assert (len(results) == 1), "There should be 1 results"
 
