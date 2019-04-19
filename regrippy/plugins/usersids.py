@@ -1,3 +1,4 @@
+# Plugin written by Tim Taylor, timtaylor3@yahoo.com
 from regrippy import BasePlugin, PluginResult, mactime
 
 

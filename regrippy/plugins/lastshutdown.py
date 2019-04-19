@@ -1,3 +1,4 @@
+# Plugin written by Tim Taylor, timtaylor3@yahoo.com
 import struct
 from Registry.RegistryParse import parse_windows_timestamp
 from regrippy import BasePlugin, PluginResult, mactime
