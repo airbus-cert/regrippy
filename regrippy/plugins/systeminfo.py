@@ -74,7 +74,6 @@ class Plugin(BasePlugin):
 
                     for entry in key2.values():
                         if entry.name() == "IPAddress":
-                            '''This bit has not been tested'''
                             res = PluginResult(key=key, value=entry)
                             ip_address = entry.value()[0]
                             if ip_address != '':
