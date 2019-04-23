@@ -79,8 +79,6 @@ def test_run(mock_software, mock_control, mock_services):
     assert (results[2].custom["value"] == "Operating System:\tWindows 7 Professional"), \
         "It should have returned 'Operating System:\tWindows 7 Professional'"
 
-
-
     # SYSTEM Control path
     p = plugin(mock_control, LoggerMock(), "SYSTEM", "-")
     results = list(p.run())
