@@ -75,7 +75,7 @@ class Plugin(BasePlugin):
                     for entry in key2.values():
                         if entry.name() == "IPAddress":
                             res = PluginResult(key=key, value=entry)
-                            ip_address = entry.value()[0]
+                            ip_address = entry.value()
                             if ip_address != '':
                                 res.custom['value'] = "IP Address:\t\t{0}".format(ip_address)
                                 yield res
