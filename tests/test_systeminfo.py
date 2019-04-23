@@ -72,13 +72,29 @@ def test_run(mock_software, mock_control, mock_services):
     results = list(p.run())
 
     assert (len(results) == 3), "There should be  3 results."
+    assert (results[0].custom["value"] == "Install Date:\t\t2018-04-10T12:41:40Z"), \
+        "It should have returned 'Install Date:\t\t2018-04-10T12:41:40Z'"
+    assert (results[1].custom["value"] == "Registered Owner:\tSome Dude"), \
+        "It should have returned 'Registered Owner\tSome Dude'"
+    assert (results[2].custom["value"] == "Operating System:\tWindows 7 Professional"), \
+        "It should have returned 'Operating System:\tWindows 7 Professional'"
+
+
 
     # SYSTEM Control path
     p = plugin(mock_control, LoggerMock(), "SYSTEM", "-")
     results = list(p.run())
     assert (len(results) == 2), "There should be 2 results"
+    assert (results[0].custom["value"] == "Hostname:\t\tTestPC"), \
+        "It should have returned 'Hostname:\t\tTestPC'"
+    assert (results[1].custom["value"] == "Last Shutdown Time:\t2018-05-30T08:06:36.766026Z"), \
+        "It should have returned 'Install Date:\t2018-04-10T12:41:40Z'"
 
     # SYSTEM services
     p = plugin(mock_services, LoggerMock(), "SYSTEM", "-")
     results = list(p.run())
     assert (len(results) == 2), "There should be 2 results"
+    assert (results[0].custom["value"] == "IP Address:\t\t127.0.0.1"), \
+        "It should have returned 'IP Address:\t127.0.0.1'"
+    assert (results[1].custom["value"] == "IP Address:\t\t127.0.0.2"), \
+        "It should have returned 'IP Address:\t\t127.0.0.2'"
