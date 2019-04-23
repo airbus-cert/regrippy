@@ -53,7 +53,6 @@ def mock_services():
     reg = RegistryMock("SYSTEM", "system", interface1.root())
     reg.set_ccs(1)
 
-    interface1.add_child('DhcpIPAddress')
     val1 = RegistryValueMock('DhcpIPAddress', '127.0.0.1', RegSZ)
     interface1.add_value(val1)
 
