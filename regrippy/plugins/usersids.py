@@ -10,6 +10,8 @@ class Plugin(BasePlugin):
     def run(self):
         path = r"Microsoft\Windows NT\CurrentVersion\ProfileList"
         key = self.open_key(path)
+        if not key:
+            return
 
         sid_list = list()
 
