@@ -63,6 +63,7 @@ class Plugin(BasePlugin):
                                     "EnableDHCP",
                                     "DhcpNetworkHint",
                                     "DhcpDomain",
+                                    "DhcpDomainSearchList",
                                     "DhcpServer",
                                     "DhcpIPAddress", "IPAddress",
                                     "DhcpSubnetMask",
