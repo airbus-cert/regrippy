@@ -44,36 +44,63 @@ class Plugin(BasePlugin):
                 interface_list.append(v.name())
 
             for guid in interface_list:
-                guid_path = "".join([self.get_currentcontrolset_path(),
-                                     "services\\Tcpip\\Parameters\\Interfaces\\",
-                                     guid])
-
+                guid_path = reg_interfaces + '\\' + guid
                 key3 = self.open_key(guid_path)
+
                 if not key3:
                     continue
 
                 for v in key3.values():
                     res = PluginResult(key=key3, value=v)
-                    if v.name() == "Domain":
-                        res.custom['value'] = "Domain, {}".format(v.value())
 
-                    if v.name() == "IPAddress":
-                        res.custom['value'] = "IPAddress, {}".format(v.value())
+                    if v.name() in ["Domain",
+                                    "EnableDHCP",
+                                    "DhcpDomain",
+                                    "DhcpServer",
+                                    "DhcpGatewayHardware",
+                                    "DhcpIPAddress", "IPAddress",
+                                    "DhcpSubnetMask",
+                                    "DhcpConnForceBroadcastFlag",
+                                    "DhcpGatewayHardwareCount",
+                                    "DhcpInterfaceOptions",
+                                    "DhcpNameServer",
+                                    "NameServer",
+                                    "UseZeroBroadcast",
+                                    "EnableDeadGWDetect",
+                                    "IsServerNapAware",
+                                    "RegistrationEnabled",
+                                    "RegisterAdapterName",
+                                    "Lease",
+                                    "AddressType"
+                                    "T1",
+                                    "T2"]:
+                        res.custom['value'] = "{}: {}".format(v.name(), v.value())
+                        yield res
 
-                    if v.name() == "DhcpIPAddress":
-                        res.custom['value'] = "IPAddress, {}".format(v.value())
+                    if v.name() == "DhcpSubnetMaskOpt":
+                        lst_ips = v.value()
+                        str_ip = [i for i in lst_ips if i]
+                        str_ip = ', '.join(str_ip)
+                        res.custom['value'] = "{}: {}".format(v.name(), str_ip)
+                        yield res
 
-                    if v.name() == "DhcpServer":
-                        res.custom['value'] = "DhcpServer, {}".format(v.value())
+                    if v.name() =="LeaseObtainedTime":
+                        res.custom['value'] = "{}: {}".format(v.name(), v.value())
+                        yield res
 
-                    if v.name() == "DhcpSubnetMask":
-                        res.custom['value'] = "DhcpSubnetMask, {}".format(v.value())
+                    if v.name() =="LeaseTerminatesTime":
+                        res.custom['value'] = "{}: {}".format(v.name(), v.value())
+                        yield res
 
-                yield res
+                    if v.name() =="DhcpDefaultGateway":
+                        lst_ips = v.value()
+                        str_ip = [i for i in lst_ips if i]
+                        str_ip = ', '.join(str_ip)
+                        res.custom['value'] = "{}: {}".format(v.name(), str_ip)
+                        yield res
 
     def display_human(self, result):
-        print(result.custom['value'])
+        print("{0}".format(result.custom["value"]))
 
     def display_machine(self, result):
         print(mactime(name=result.custom['value'], mtime=result.mtime))
-
