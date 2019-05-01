@@ -17,20 +17,22 @@ class Plugin(BasePlugin):
             nic_list.append(v.name())
 
         for nic in nic_list:
-            path = "".join("Microsoft\\Windows NT\\CurrentVersion\\NetworkCards\\", nic)
+            path = "".join(["Microsoft\\Windows NT\\CurrentVersion\\NetworkCards\\", nic])
             key2 = self.open_key(path)
             if not key2:
                 return
 
+            desc = ''
+            service_name = ''
             for v in key2.values():
+                res = PluginResult(key=key, value=v)
                 if v.name() == "Description":
                     desc = v.value()
                 if v.name() == "ServiceName":
-                    guid = v.value()
+                    service_name = v.value()
 
-                print("Description {}".format(desc))
-                print("ServiceName {}".format(guid))
-
+                res.custom['value'] = "{}, {}".format(service_name, desc)
+            yield res
 
     def display_human(self, result):
         print(result.custom['value'])
