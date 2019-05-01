@@ -50,19 +50,24 @@ class Plugin(BasePlugin):
                 if not key3:
                     continue
 
+                counter = 1
                 for v in key3.values():
                     res = PluginResult(key=key3, value=v)
 
+                    if counter == 1:
+                        counter = 2
+                        res.custom['value'] = "Settings for the adapter with a guid {}".format(guid)
+                        yield res
+
                     if v.name() in ["Domain",
                                     "EnableDHCP",
+                                    "DhcpNetworkHint",
                                     "DhcpDomain",
                                     "DhcpServer",
-                                    "DhcpGatewayHardware",
                                     "DhcpIPAddress", "IPAddress",
                                     "DhcpSubnetMask",
                                     "DhcpConnForceBroadcastFlag",
                                     "DhcpGatewayHardwareCount",
-                                    "DhcpInterfaceOptions",
                                     "DhcpNameServer",
                                     "NameServer",
                                     "UseZeroBroadcast",
@@ -73,7 +78,10 @@ class Plugin(BasePlugin):
                                     "Lease",
                                     "AddressType"
                                     "T1",
-                                    "T2"]:
+                                    "T2",
+                                    "MTU",
+                                    "IPAutoconfigurationenabled",
+                                    "UseZeroBroadcast"]:
                         res.custom['value'] = "{}: {}".format(v.name(), v.value())
                         yield res
 
@@ -84,20 +92,35 @@ class Plugin(BasePlugin):
                         res.custom['value'] = "{}: {}".format(v.name(), str_ip)
                         yield res
 
-                    if v.name() =="LeaseObtainedTime":
-                        res.custom['value'] = "{}: {}".format(v.name(), v.value())
-                        yield res
-
-                    if v.name() =="LeaseTerminatesTime":
-                        res.custom['value'] = "{}: {}".format(v.name(), v.value())
-                        yield res
-
-                    if v.name() =="DhcpDefaultGateway":
+                    if v.name() == "DhcpDefaultGateway":
                         lst_ips = v.value()
                         str_ip = [i for i in lst_ips if i]
                         str_ip = ', '.join(str_ip)
                         res.custom['value'] = "{}: {}".format(v.name(), str_ip)
                         yield res
+
+                    if v.name() == "SubnetMask":
+                        lst_ips = v.value()
+                        str_ip = [i for i in lst_ips if i]
+                        str_ip = ', '.join(str_ip)
+                        res.custom['value'] = "{}: {}".format(v.name(), str_ip)
+                        yield res
+
+                    '''if v.name() == "DhcpGatewayHardware"
+                        res.custom['value'] = "{}: {}".format(v.name(), v.value())
+                        yield res'''
+
+                    '''if v.name() == "DhcpInterfaceOptions":
+                        res.custom['value'] = "{}: {}".format(v.name(), v.value())
+                        yield res'''
+
+                    '''if v.name() == "LeaseObtainedTime":
+                        res.custom['value'] = "{}: {}".format(v.name(), v.value())
+                        yield res'''
+
+                    '''if v.name() == "LeaseTerminatesTime":
+                        res.custom['value'] = "{}: {}".format(v.name(), v.value())
+                        yield res'''
 
     def display_human(self, result):
         print("{0}".format(result.custom["value"]))
