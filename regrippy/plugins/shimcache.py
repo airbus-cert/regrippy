@@ -1,4 +1,6 @@
-from regrippy import BasePlugin, PluginResult
+from datetime import datetime
+
+from regrippy import BasePlugin, PluginResult, mactime
 from regrippy.thirdparty.ShimCacheParser import read_cache
 
 
@@ -16,9 +18,14 @@ class Plugin(BasePlugin):
         for entry in read_cache(key.value("AppCompatCache").value()):
             res = PluginResult(key=key, value=None)
             res.custom["date"] = entry[0]
-            res.custom["path"] = entry[2]
+            res.custom["path"] = entry[2].decode("utf8")
             yield res
 
     def display_human(self, result):
         print(result.custom["date"] + "\t" + result.custom["path"])
 
+    def display_machine(self, result):
+        date = datetime.strptime(result.custom["date"], "%Y-%m-%d %H:%M:%S")
+        atime = int(date.timestamp())
+
+        print(mactime(name=result.custom["path"], mtime=result.mtime, atime=atime))
