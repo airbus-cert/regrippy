@@ -18,7 +18,10 @@ class Plugin(BasePlugin):
         for entry in read_cache(key.value("AppCompatCache").value()):
             res = PluginResult(key=key, value=None)
             res.custom["date"] = entry[0]
-            res.custom["path"] = entry[2].decode("utf8")
+            if type(entry[2]) == bytes:
+                res.custom["path"] = entry[2].decode("utf8")
+            else:
+                res.custom["path"] = entry[2]
             yield res
 
     def display_human(self, result):
