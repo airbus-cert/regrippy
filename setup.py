@@ -65,8 +65,5 @@ All plugins should also support both a human-readable and machine-readable outpu
         'wheel',
         'python-registry > 1.1.0'
     ],
-    dependency_links=[
-        'git+https://github.com/williballenthin/python-registry#egg=python-registry-1.2.0'
-    ],
     entry_points=generate_entry_points()
 )
