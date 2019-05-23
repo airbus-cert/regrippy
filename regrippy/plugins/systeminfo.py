@@ -1,6 +1,5 @@
 import struct
 from datetime import datetime
-from Registry import Registry
 from Registry.RegistryParse import parse_windows_timestamp
 from regrippy import BasePlugin, PluginResult, mactime
 

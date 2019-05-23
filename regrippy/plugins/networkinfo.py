@@ -1,4 +1,7 @@
 # Plugin written by Tim Taylor, timtaylor3@yahoo.com
+import binascii
+import struct
+from datetime import datetime
 from regrippy import BasePlugin, PluginResult, mactime
 
 
@@ -68,6 +71,7 @@ class Plugin(BasePlugin):
                                     "DhcpIPAddress", "IPAddress",
                                     "DhcpSubnetMask",
                                     "DhcpConnForceBroadcastFlag",
+                                    "DhcpDefaultGateway"
                                     "DhcpGatewayHardwareCount",
                                     "DhcpNameServer",
                                     "NameServer",
@@ -78,8 +82,6 @@ class Plugin(BasePlugin):
                                     "RegisterAdapterName",
                                     "Lease",
                                     "AddressType"
-                                    "T1",
-                                    "T2",
                                     "MTU",
                                     "IPAutoconfigurationenabled",
                                     "UseZeroBroadcast"]:
@@ -107,20 +109,34 @@ class Plugin(BasePlugin):
                         res.custom['value'] = "{}: {}".format(v.name(), str_ip)
                         yield res
 
-                    '''if v.name() == "DhcpGatewayHardware"
-                        res.custom['value'] = "{}: {}".format(v.name(), v.value())
+                    if v.name() == "LeaseObtainedTime":
+                        lease_obtained_time = datetime.utcfromtimestamp(v.value()).isoformat('T') + 'Z'
+                        res.custom['value'] = "LeaseObtainedTime: {0}".format(lease_obtained_time)
+                        yield res
+
+                    if v.name() == "LeaseTerminatesTime":
+                        lease_terminates_time = datetime.utcfromtimestamp(v.value()).isoformat('T') + 'Z'
+                        res.custom['value'] = "LeaseTerminatesTime: {0}".format(lease_terminates_time)
+                        yield res
+
+                    if v.name() == "T1":
+                        t1 = datetime.utcfromtimestamp(v.value()).isoformat('T') + 'Z'
+                        res.custom['value'] = "T1: {0}".format(t1)
+                        yield res
+
+                    if v.name() == "T2":
+                        t2 = datetime.utcfromtimestamp(v.value()).isoformat('T') + 'Z'
+                        res.custom['value'] = "T2: {0}".format(t2)
+                        yield res
+
+                    '''if v.name() == "DhcpGatewayHardware":
+                        binary = binascii.hexlify(v.value())
+                        res.custom['value'] = "DhcpGatewayHardware: {}".format(binary)
                         yield res'''
 
                     '''if v.name() == "DhcpInterfaceOptions":
-                        res.custom['value'] = "{}: {}".format(v.name(), v.value())
-                        yield res'''
-
-                    '''if v.name() == "LeaseObtainedTime":
-                        res.custom['value'] = "{}: {}".format(v.name(), v.value())
-                        yield res'''
-
-                    '''if v.name() == "LeaseTerminatesTime":
-                        res.custom['value'] = "{}: {}".format(v.name(), v.value())
+                        binary = binascii.hexlify(v.value())
+                        res.custom['value'] = "{}: {}".format(v.name(), binary)
                         yield res'''
 
     def display_human(self, result):
