@@ -36,7 +36,7 @@ def mock_system():
     val6 = RegistryValueMock('DhcpDomain', 'test.domain.com', RegSZ)
     val7 = RegistryValueMock('DhcpNameServer', '192.168.0.1 192.168.1.1', RegSZ)
     val8 = RegistryValueMock('DhcpDefaultGateway', ['192.168.0.2', '', ''],  RegSZ)
-    val9 = RegistryValueMock('DhcpSubnetMaskOpt', '255.255.255.0', RegSZ)
+    val9 = RegistryValueMock('DhcpSubnetMaskOpt', ['255.255.255.0'], RegSZ)
     val10 = RegistryValueMock('UseZeroBroadcast', 0, RegSZ)
     val11 = RegistryValueMock('EnableDeadGWDetect', 1, RegSZ)
     val12 = RegistryValueMock('EnableDHCP', 1, RegSZ)
@@ -92,27 +92,49 @@ def test_networkinfo(mock_software, mock_system):
     # SYSTEM NIC configs
     p = plugin(mock_system, LoggerMock(), "SYSTEM", "-")
     results = list(p.run())
-    assert (len(results) == 22), "There should be 19 results"
-    assert (results[0].custom["value"] == "DhcpIPAddress: 127.0.0.1"), "It should have returned 'DhcpIPAddress: 127.0.0.1'"
-    assert (results[1].custom["value"] == "IPAddress: 127.0.0.2"), "It should have returned 'IP Address: 127.0.0.2'"
-    assert (results[2].custom["value"] == "DhcpSubnetMask: 255.255.255.0"), "DhcpSubnetMask: 255.255.255.0'"
-    assert (results[3].custom["value"] == "DhcpServer: 10.10.10.2"), "It should have returned 'DhcpServer: 10.10.10.2'"
-    assert (results[4].custom["value"] == "DhcpConnForceBroadcastFlag: 0"), "It should have returned 'DhcpConnForceBroadcastFlag: 0'"
-    assert (results[5].custom["value"] == "DhcpDomain: test.domain.com"), "It should have returned 'DhcpDomain: test.domain.com'"
-    assert (results[6].custom["value"] == "DhcpNameServer: 192.168.0.1 192.168.1.1"), "It should have returned 'DhcpNameServer: 192.168.0.1 192.168.1.1'"
-    assert (results[7].custom["value"] == "DhcpDefaultGateway: 192.168.0.2"), "It should have returned 'DhcpDefaultGateway: 192.168.0.2'"
-    assert (results[8].custom["value"] == "DhcpSubnetMaskOpt: 255.255.255.0"), "It should have returned 'DhcpSubnetMaskOpt: 255.255.255.0'"
-    assert (results[9].custom["value"] == "UseZeroBroadcast: 0")
-    assert (results[10].custom["value"] == "EnableDeadGWDetect: 1")
-    assert (results[11].custom["value"] == "EnableDHCP: 1")
-    assert (results[12].custom["value"] == "NameServer: test_name_server")
-    assert (results[13].custom["value"] == "Domain: test.domain")
-    assert (results[14].custom["value"] == "RegistrationEnabled: 1")
-    assert (results[15].custom["value"] == "RegisterAdapterName: 0")
-    assert (results[16].custom["value"] == "Lease: 86400")
-    assert (results[17].custom["value"] == "IsServerNapAware: 0")
-    assert (results[18].custom["value"] == "LeaseObtainedTime:\t2018-05-31T14:25:01Z")
-    assert (results[19].custom["value"] == "T1:\t2018-05-31T14:25:01Z")
-    assert (results[20].custom["value"] == "T2:\t2018-05-31T14:25:01Z")
-    assert (results[21].custom["value"] == "LeaseTerminatesTime:\t2018-05-31T14:25:01Z")
+    assert (len(results) == 23), "There should be 22 results"
+    assert (results[1].custom["value"] == "DhcpIPAddress:\t127.0.0.1"), \
+        "It should have returned 'DhcpIPAddress: 127.0.0.1'"
+    assert (results[2].custom["value"] == "IPAddress:\t127.0.0.2"),\
+        "It should have returned 'IP Address: 127.0.0.2'"
+    assert (results[3].custom["value"] == "DhcpSubnetMask:\t255.255.255.0"), \
+        "DhcpSubnetMask: 255.255.255.0'"
+    assert (results[4].custom["value"] == "DhcpServer:\t10.10.10.2"), \
+        "It should have returned 'DhcpServer: 10.10.10.2'"
+    assert (results[5].custom["value"] == "DhcpConnForceBroadcastFlag:\t0"), \
+        "It should have returned 'DhcpConnForceBroadcastFlag: 0'"
+    assert (results[6].custom["value"] == "DhcpDomain:\ttest.domain.com"), \
+        "It should have returned 'DhcpDomain: test.domain.com'"
+    assert (results[7].custom["value"] == "DhcpNameServer:\t192.168.0.1 192.168.1.1"), \
+        "It should have returned 'DhcpNameServer: 192.168.0.1 192.168.1.1'"
+    assert (results[8].custom["value"] == "DhcpDefaultGateway:\t192.168.0.2"), \
+        "It should have returned 'DhcpDefaultGateway: 192.168.0.2'"
+    assert (results[9].custom["value"] == "DhcpSubnetMaskOpt:\t255.255.255.0"), \
+        "It should have returned 'DhcpSubnetMaskOpt: 255.255.255.0'"
+    assert (results[10].custom["value"] == "UseZeroBroadcast:\t0"), \
+        "It should have returned 'UseZeroBroadcast:\t0'"
+    assert (results[11].custom["value"] == "EnableDeadGWDetect:\t1"), \
+        "It should have returned 'EnableDeadGWDetect:\t1'"
+    assert (results[12].custom["value"] == "EnableDHCP:\t1"), \
+        "It should have returned 'EnableDHCP:\t1'"
+    assert (results[13].custom["value"] == "NameServer:\ttest_name_server"),  \
+        "It should have returned 'NameServer:\ttest_name_server'"
+    assert (results[14].custom["value"] == "Domain:\ttest.domain"), \
+        "It should have returned 'Domain:\ttest.domain'"
+    assert (results[15].custom["value"] == "RegistrationEnabled:\t1"), \
+        "It should have returned 'RegistrationEnabled:\t1'"
+    assert (results[16].custom["value"] == "RegisterAdapterName:\t0"), \
+        "It should have returned 'RegisterAdapterName:\t0'"
+    assert (results[17].custom["value"] == "Lease:\t86400"), \
+        "It should have returned 'Lease:\t86400'"
+    assert (results[18].custom["value"] == "IsServerNapAware:\t0"), \
+        "It should have returned 'IsServerNapAware:\t0'"
+    assert (results[19].custom["value"] == "LeaseObtainedTime:\t2018-05-31T14:25:01Z"), \
+        "It should have returned 'LeaseObtainedTime:\t2018-05-31T14:25:01Z'"
+    assert (results[20].custom["value"] == "T1:\t2018-05-31T14:25:01Z"), \
+        "It should have returned 'T1:\t2018-05-31T14:25:01Z'"
+    assert (results[21].custom["value"] == "T2:\t2018-05-31T14:25:01Z"), \
+        "It should have returned 'T2:\t2018-05-31T14:25:01Z'"
+    assert (results[22].custom["value"] == "LeaseTerminatesTime:\t2018-05-31T14:25:01Z"), \
+        "It should have returned 'LeaseTerminatesTime:\t2018-05-31T14:25:01Z'"
 

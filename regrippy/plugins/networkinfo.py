@@ -58,55 +58,46 @@ class Plugin(BasePlugin):
                     if counter == 1:
                         counter = 2
                         res.custom['value'] = "Settings for the adapter with a guid {}".format(guid)
+                        yield res
 
-                    if v.name() in ["Domain",
-                                    "EnableDHCP",
+                    if v.name() in ["AddressType",
                                     "DhcpNetworkHint",
                                     "DhcpDomain",
                                     "DhcpDomainSearchList",
                                     "DhcpServer",
-                                    "DhcpIPAddress", "IPAddress",
-                                    "DhcpSubnetMask", "SubnetMask", "DhcpSubnetMaskOpt",
+                                    "DhcpIPAddress",
+                                    "DhcpSubnetMask",
                                     "DhcpConnForceBroadcastFlag",
                                     "DhcpGatewayHardwareCount",
                                     "DhcpNameServer",
-                                    "NameServer",
-                                    "UseZeroBroadcast",
+                                    "DhcpNetworkHint",
+                                    "Domain",
                                     "EnableDeadGWDetect",
+                                    "EnableDHCP",
+                                    "IPAddress",
+                                    "IPAutoconfigurationEnabled",
                                     "IsServerNapAware",
+                                    "Lease",
+                                    "MTU",
+                                    "NameServer",
                                     "RegistrationEnabled",
                                     "RegisterAdapterName",
-                                    "Lease",
-                                    "AddressType",
-                                    "MTU",
-                                    "IPAutoconfigurationenabled",
+                                    "SubnetMask",
                                     "UseZeroBroadcast"]:
-                        res.custom['value'] = "{}: {}".format(v.name(), v.value())
+                        res.custom['value'] = "{}:\t{}".format(v.name(), v.value())
                         yield res
 
-                    if v.name() == "DhcpDefaultGateway":
-                        lst_ips = v.value()
-                        str_ip = [i for i in lst_ips if i]
-                        str_ip = ', '.join(str_ip)
-                        res.custom['value'] = "{}: {}".format(v.name(), str_ip)
+                    if v.name() in ["DhcpDefaultGateway", "DhcpSubnetMaskOpt"]:
+                        v_list = v.value()
+                        str_list = [i for i in v_list if i]
+                        str_list = ', '.join(str_list)
+                        res.custom['value'] = "{}:\t{}".format(v.name(), str_list)
                         yield res
 
                     if v.name() in ["LeaseObtainedTime", "LeaseTerminatesTime", "T1", "T2"]:
                         raw = datetime.utcfromtimestamp(v.value()).isoformat('T') + 'Z'
                         res.custom['value'] = "{0}:\t{1}".format(v.name(), raw)
                         yield res
-
-                    '''
-                    if v.name() == "DhcpGatewayHardware"
-                        res.custom['value'] = "{}: {}".format(v.name(), v.value())
-                        yield res
-                    '''
-
-                    '''
-                    if v.name() == "DhcpInterfaceOptions":
-                        res.custom['value'] = "{}: {}".format(v.name(), v.value())
-                        yield res
-                    '''
 
     def display_human(self, result):
         print("{0}".format(result.custom["value"]))
