@@ -39,6 +39,9 @@ def find_path_nocase(root_path, rest_list):
 
 
 def get_hive_paths(args, hive_name):
+    # use REG_ROOT to set root path of hive
+    args.root = args.root or os.getenv("REG_ROOT")
+
     if hive_name.lower() in ["all", "ntuser.dat", "usrclass.dat"] and args.all_user_hives and not args.root:
         print("Error: --all-user-hives requires --root", file=sys.stderr)
         sys.exit(3)
