@@ -132,7 +132,7 @@ def main():
     parser.add_argument("--sam", "-a", help="Path to the SAM hive. Overrides --root and the REG_SAM environment variable", type=str, default="")
     parser.add_argument("--ntuser", "-n", help="Path to the NTUSER.DAT hive. Overrides the REG_NTUSER environment variable", type=str, default="")
     parser.add_argument("--usrclass", "-u", help="Path to the UsrClass.DAT hive. Overrides the REG_USRCLASS environment variable", type=str, default="")
-    parser.add_argument("--root", "-r", help="Path to the C: folder.", type=str, default="")
+    parser.add_argument("--root", "-r", help="Path to the C: folder. Overrides the REG_ROOT environment variable", type=str, default="")
     parser.add_argument("--all-user-hives", help="Work on all NTUSER.DAT and USRCLASS.DAT hives if required. Requires --root. Overrides --ntuser and --usrclass.", action="store_true")
     parser.add_argument("--verbose", "-v", help="Be more verbose", action="store_true")
     parser.add_argument("--pipe", "-p", help="Force output in pipe format", action="store_true")
