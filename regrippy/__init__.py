@@ -83,7 +83,7 @@ class BasePlugin(object):
 
         if len(parts) < 2:
             return default
-        return parts[:-2]
+        return parts[-2]
 
     def display_human(self, result):
         """Displays a result to a human. By default,
