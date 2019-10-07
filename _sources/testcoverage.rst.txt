@@ -8,7 +8,7 @@ strive for 100% coverage :-)
 To make this dream a reality, please attach a test file to your pull requests! This way, the 
 percentage at least won't go down.
 
-**Current percentage: 88%**
+**Current percentage: 91%**
 
 .. csv-table:: 
    :header: "Plugin name","Test status"
@@ -19,8 +19,11 @@ percentage at least won't go down.
    "recentdocs",OK
    "version",OK
    "uninstall",OK
+   "lastshutdown",OK
    "services",OK
    "timezone",OK
+   "shimcache",OK
+   "usersids",OK
    "userassist",OK
    "rdphint",OK
    "filedialogmru",OK
@@ -28,7 +31,9 @@ percentage at least won't go down.
    "lastloggedon",OK
    "typedurls",OK
    "mndmru",OK
+   "systeminfo",OK
    "srum",MISSING
    "run",OK
+   "localusers",OK
    "regtime",MISSING
 
