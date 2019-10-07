@@ -75,16 +75,15 @@ class BasePlugin(object):
         """
 
         # Given the following path to a hive
-        # /mnt/c/Users/JohnDoe/NTUSER.DAT
-        #              ^^^^^^^
-        #               we want this part
+        # \\Users\\JohnDoe\\NTUSER.DAT
+        #          ^^^^^^^
+        #           we want this part
 
-        dirname = os.path.dirname(self.hive_path)  # /mnt/c/Users/JohnDoe
-        folder = os.path.basename(dirname)  # JohnDoe
+        parts = self.reg.hive_name().split("\\")
 
-        if not folder:
+        if len(parts) < 2:
             return default
-        return folder
+        return parts[:-2]
 
     def display_human(self, result):
         """Displays a result to a human. By default,
