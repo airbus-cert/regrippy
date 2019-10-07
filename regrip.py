@@ -135,7 +135,7 @@ def main():
     parser.add_argument("--root", "-r", help="Path to the C: folder. Overrides the REG_ROOT environment variable", type=str, default="")
     parser.add_argument("--all-user-hives", help="Work on all NTUSER.DAT and USRCLASS.DAT hives if required. Requires --root. Overrides --ntuser and --usrclass.", action="store_true")
     parser.add_argument("--verbose", "-v", help="Be more verbose", action="store_true")
-    parser.add_argument("--pipe", "-p", help="Force output in pipe format", action="store_true")
+    parser.add_argument("--bodyfile", "-b", help="Force output in Bodyfile format", action="store_true")
     parser.add_argument("--list", "-l", help="List available plugins", action="store_true")
 
     if not plugin_name:
@@ -152,7 +152,6 @@ def main():
     if args.verbose:
         l.setLevel("DEBUG")
 
-    is_pipe = args.pipe or (not os.isatty(sys.stdout.fileno()))
     plugin = load_plugin(plugin_name)
 
     if type(plugin.__REGHIVE__) == str:
@@ -177,10 +176,10 @@ def main():
             results = p.run()
 
             if results:
-                if hive_path != "-" and hive_name == "NTUSER.DAT":
+                if hive_name == "NTUSER.DAT":
                     p.info(f"User: {p.guess_username()}")
                 for result in results:
-                    if is_pipe:
+                    if args.bodyfile:
                         p.display_machine(result)
                     else:
                         p.display_human(result)
