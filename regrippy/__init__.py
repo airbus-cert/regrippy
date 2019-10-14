@@ -2,7 +2,7 @@ import os
 from Registry import Registry
 
 
-def mactime(md5="0", name="", inode=0, mode_as_string="", uid=0, gid=0, size=0, atime=0, mtime=0, ctime=0, btime=0):
+def mactime(md5="0", name="", inode=0, mode_as_string="", uid=0, gid=0, size=0, atime=-1, mtime=-1, ctime=-1, btime=-1):
     """Formats and returns a Bodyfile-format line.
     All parameters are optional
     """
