@@ -173,11 +173,11 @@ def main():
                 reg = Registry.Registry(hive_path)
 
             p = plugin(reg, l, hive_name, hive_path)
-            results = p.run()
+            results = list(p.run())
 
             if results:
                 if hive_name == "NTUSER.DAT":
-                    p.info(f"User: {p.guess_username()}")
+                    print(f"[.] User: {p.guess_username()}")
                 for result in results:
                     if args.bodyfile:
                         p.display_machine(result)
