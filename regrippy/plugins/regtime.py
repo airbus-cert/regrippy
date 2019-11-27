@@ -19,7 +19,6 @@ class Plugin(BasePlugin):
             yield from self.dump(subkey)
     
     def cleanup_path(self, s):
-        rm = "CsiTool-CreateHive-{00000000-0000-0000-0000-000000000000}"
-        if s.startswith(rm):
-            return s[len(rm):]
-        return s
+        parts = s.split("\\")[1:]
+        return self.reg.hive_name() + "\\" + "\\".join(parts)
+
