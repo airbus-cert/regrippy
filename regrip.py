@@ -176,12 +176,12 @@ def main():
             results = list(p.run())
 
             if results:
-                if hive_name == "NTUSER.DAT":
-                    print(f"[.] User: {p.guess_username()}")
                 for result in results:
                     if args.bodyfile:
                         p.display_machine(result)
                     else:
+                        if hive_name == "NTUSER.DAT":
+                            print(f"[.] User: {p.guess_username()}")
                         p.display_human(result)
 
 
