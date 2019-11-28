@@ -20,5 +20,7 @@ class Plugin(BasePlugin):
     
     def cleanup_path(self, s):
         parts = s.split("\\")[1:]
-        return self.reg.hive_name() + "\\" + "\\".join(parts)
+        hive_path = self.reg.hive_name()
+        hive_name = hive_path.split("\\")[-1]
+        return hive_name + "\\" + "\\".join(parts)
 
