@@ -35,7 +35,16 @@ class Plugin(BasePlugin):
     
     def display_human(self, result):
         ua = result.custom['userassist']
-        print(f"{ua.name} - exec: {ua.number_of_execs} // focus: {ua.focus_count} ({datetime.timedelta(seconds=ua.focus_time_secs)}) / last exec: {ua.last_exec}")
+        if ua.last_exec == 0:
+            last_exec_str = "(N/A)"
+        else:
+            last_exec = datetime.date.fromtimestamp(ua.last_exec)
+            last_exec_str = last_exec.strftime("%Y-%m-%d %H:%M:%S%z")
+        print(f"[{ua.name}]")
+        print(f"  Executed {ua.number_of_execs} times")
+        print(f"  Focused {ua.focus_count} times (total: {datetime.timedelta(seconds=ua.focus_time_secs)})")
+        print(f"  Last execution: {last_exec_str}")
+        print()
 
     def display_machine(self, result):
         ua = result.custom['userassist']
