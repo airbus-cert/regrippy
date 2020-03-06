@@ -1,4 +1,5 @@
 from regrippy import BasePlugin, PluginResult, mactime
+from Registry.RegistryParse import parse_windows_timestamp
 # Not tested
 
 
@@ -25,13 +26,17 @@ class Plugin(BasePlugin):
                 res = PluginResult(key=key, value=v)
                 res.custom["Path"] = path
                 res.custom["Value"] = v.value()
+
+                dt = key.timestamp()
+                res.custom['Last Write Time'] = dt.isoformat('T') + 'Z'
                 yield res
 
     def display_human(self, result):
         if "VSS" in result.custom['Path']:
-            print(r"{0}\{1} {2} {3}".format(result.custom['Path'], result.value_name, result.custom["Value"], result.mtime))
+            print(r"{0}\{1} {2} {3}".format(result.custom['Path'], result.value_name, result.custom["Value"],
+                                            result.custom['Last Write Time']))
         else:
-            print(r"{0}\{1} {2}".format(result.custom['Path'], result.value_name, result.mtime))
+            print(r"{0}\{1} {2}".format(result.custom['Path'], result.value_name, result.custom['Last Write Time']))
 
     def display_machine(self, result):
         if "VSS" in result.custom['Path']:
