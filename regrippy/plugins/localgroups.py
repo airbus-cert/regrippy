@@ -6,6 +6,7 @@ from regrippy import BasePlugin, PluginResult, mactime
 class Plugin(BasePlugin):
     """Extract local group information from the SAM & SOFTWARE databases"""
 
+    # In this case, order matters. The plugins needs the SOFTWARE hive to be parsed first to preperly enrich results.
     __REGHIVE__ = ["SOFTWARE", "SAM"]
 
     __user_profile_list = []
@@ -120,11 +121,11 @@ class Plugin(BasePlugin):
                 yield res
 
     def run(self):
-        if self.hive_name == "SAM":
+        if self.hive_name == "SOFTWARE":
+            self.user_sids_soft()
+        elif self.hive_name == "SAM":
             self.user_sids_sam()
             yield from self.yield_groups()
-        elif self.hive_name == "SOFTWARE":
-            self.user_sids_soft()
 
     def display_human(self, res):
         group = res.custom
