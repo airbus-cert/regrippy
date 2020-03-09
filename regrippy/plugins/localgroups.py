@@ -9,7 +9,8 @@ class Plugin(BasePlugin):
     # In this case, order matters. The plugins needs the SOFTWARE hive to be parsed first to preperly enrich results.
     __REGHIVE__ = ["SOFTWARE", "SAM"]
 
-    __user_profile_list = []
+    # Use class variable to persist across runs
+    user_profile_list = []
 
     def sid2asc(self, bin_sid):
         """Turns a binary SID into its ASCII representation"""
@@ -55,8 +56,8 @@ class Plugin(BasePlugin):
             sid = "{0}-{1}".format(machine_sid, subkey.value("(default)").value_type())
             # User names are stored inside Names' subkeys; each subkey's name holds the associated user name.
             name = subkey.name()
-            if not any(profile.get("sid", None) == sid for profile in self.__user_profile_list):
-                self.__user_profile_list.append({"sid": sid, "name": name})
+            if not any(profile.get("sid", None) == sid for profile in self.user_profile_list):
+                self.user_profile_list.append({"sid": sid, "name": name})
         return
 
     def user_sids_soft(self):
@@ -69,8 +70,8 @@ class Plugin(BasePlugin):
             sid = subkey.name()
             # The "profile path" points to the user folder; we can use it to map the SID to the user
             name = subkey.value("ProfileImagePath").value().rpartition("\\")[2]
-            if not any(profile.get("sid", None) == sid for profile in self.__user_profile_list):
-                self.__user_profile_list.append({"sid": sid, "name": name})
+            if not any(profile.get("sid", None) == sid for profile in self.user_profile_list):
+                self.user_profile_list.append({"sid": sid, "name": name})
         return
 
     def yield_groups(self):
@@ -133,7 +134,7 @@ class Plugin(BasePlugin):
         if group["size"] > 0:
             for member_sid in group["member_sids"]:
                 mapped_user = ""
-                for user in self.__user_profile_list:
+                for user in self.user_profile_list:
                     if user["sid"] == member_sid:
                         mapped_user = user["name"]
                 if mapped_user != "":
