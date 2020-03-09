@@ -51,7 +51,7 @@ class Plugin(BasePlugin):
             # User SIDs are built by appending their Relative ID to the machine SID.
             # Relative IDs are stored inside Names' subkeys; each has a default value where the value *type* holds the
             # integer value of the RID.
-            sid = "{0}-{1}".format(machine_sid, subkey.value("").value_type())
+            sid = "{0}-{1}".format(machine_sid, subkey.value("(default)").value_type())
             # User names are stored inside Names' subkeys; each subkey's name holds the associated user name.
             name = subkey.name()
             if not any(profile.get("sid", None) == sid for profile in self.__user_profile_list):
