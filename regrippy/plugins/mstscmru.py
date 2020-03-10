@@ -2,7 +2,7 @@ from regrippy import BasePlugin, PluginResult, mactime
 
 
 class Plugin(BasePlugin):
-    """Reads 'Map Network Drive MRU' key (Most Recently Used remote drives)"""
+    """Reads Terminal Client (aka mstsc.exe) Most Recently Used address"""
 
     __REGHIVE__ = "NTUSER.DAT"
 
@@ -12,8 +12,6 @@ class Plugin(BasePlugin):
             return
 
         for value in key.values():
-            if "MRU" not in value.name():
-                continue
             res = PluginResult(key=key, value=value)
             yield res
     
