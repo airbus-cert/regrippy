@@ -19,21 +19,18 @@ class Plugin(BasePlugin):
         #   + 1 byte (count of sub auths, little endian)
         #   + 6 bytes (authority value, big endian)
         #   + n * 4 bytes where n is the count of sub auths
-        len_sid = len(bin_sid)
-        if len_sid == 12:
-            rev, _, bytes_idauth, sub = struct.unpack("<BB6sL", bin_sid)
-            int_idauth = int.from_bytes(bytes_idauth, byteorder="big", signed=False)
-            return "S-{0}-{1}-{2}".format(rev, int_idauth, sub)
-        elif len_sid == 24:
-            rev, _, bytes_idauth, sub1, sub2, sub3, sub4 = struct.unpack("<BB6s4L", bin_sid)
-            int_idauth = int.from_bytes(bytes_idauth, byteorder="big", signed=False)
-            return "S-{0}-{1}-{2}-{3}-{4}-{5}".format(rev, int_idauth, sub1, sub2, sub3, sub4)
-        elif len_sid == 28:
-            rev, _, bytes_idauth, sub1, sub2, sub3, sub4, rid = struct.unpack("<BB6s4LL", bin_sid)
-            int_idauth = int.from_bytes(bytes_idauth, byteorder="big", signed=False)
-            return "S-{0}-{1}-{2}-{3}-{4}-{5}-{6}".format(rev, int_idauth, sub1, sub2, sub3, sub4, rid)
-        else:
-            raise ValueError("Unsupported SID length (expected  12, 24, or 28): %i" % len_sid)
+
+        # Construct the fixed-length part of the SID
+        rev, sub_auth_count, bytes_idauth = struct.unpack("<BB6s", bin_sid[:8])
+        int_idauth = int.from_bytes(bytes_idauth, byteorder="big", signed=False)
+        str_sid = "S-{0}-{1}".format(rev, int_idauth)
+
+        # Get the variable part and iterate over each sub auth (4-byte little-endian integer)
+        bin_sub_auths = bin_sid[8:]
+        for i in range(0, sub_auth_count * 4, 4):
+            str_sid += "-{0}".format(struct.unpack("<L", bin_sub_auths[i : i + 4])[0])
+
+        return str_sid
 
     def machine_sid(self):
         """Gets the machine SID from the SAM hive"""
