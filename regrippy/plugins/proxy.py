@@ -12,23 +12,20 @@ class Plugin(BasePlugin):
         if not k:
             return
         
-        try:
-            r = PluginResult(key=k)
+        r = PluginResult(key=k)
 
-            r.custom["type"] = "proxy"
-            r.custom["enabled"] = self.safe_value(k, "ProxyEnabled", 0) == 1
-            r.custom["proxy"] = self.safe_value(k, "ProxyServer", "N/A")
-            r.custom["exceptions"] = self.safe_value(k, "ProxyOverride", "")
+        r.custom["type"] = "proxy"
+        r.custom["enabled"] = self.safe_value(k, "ProxyEnabled", 0) == 1
+        r.custom["proxy"] = self.safe_value(k, "ProxyServer", "N/A")
+        r.custom["exceptions"] = self.safe_value(k, "ProxyOverride", "")
 
-            yield r
+        yield r
 
-            r = PluginResult(key=k)
-            r.custom["type"] = "autoconfig"
-            r.custom["proxypac"] = self.safe_value(k, "AutoConfigURL", "N/A")
+        r = PluginResult(key=k)
+        r.custom["type"] = "autoconfig"
+        r.custom["proxypac"] = self.safe_value(k, "AutoConfigURL", "N/A")
 
-            yield r
-        except RegistryValueNotFoundException as e:
-            self.warning("Error getting proxy info:", e)
+        yield r
     
     def display_human(self, r):
         if r.custom["type"] == "proxy":
