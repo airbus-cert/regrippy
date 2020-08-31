@@ -9,3 +9,5 @@ testcoverage.rst
 dist
 *.egg-info
 build
+.tox
+.pytest_cache
