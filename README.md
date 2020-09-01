@@ -84,9 +84,23 @@ optional arguments:
   --list, -l            List available plugins
 ```
 
-## Development
+## Documentation & development
 
 If you want to make your own plugin using the RegRippy framework, head over to [the documentation](https://airbus-cert.github.io/regrippy) right now!
+
+You can also build the documentation yourself by running:
+```
+$ tox -e docs
+```
+
+## Testing
+
+This project uses [tox](https://tox.readthedocs.io/en/latest/) to automate the testing process, as well as [pytest](http://pytest.org/) for the test themselves.
+
+Running the tests can be done by invoking:
+```
+$ tox -e py37
+```
 
 ## Credits
 
