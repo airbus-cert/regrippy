@@ -1,8 +1,10 @@
-from .reg_mock import RegistryMock, RegistryKeyMock, RegistryValueMock, LoggerMock
-from Registry.Registry import RegSZ
 import pytest
+from Registry.Registry import RegSZ
 
 from regrippy.plugins.keyboard import Plugin as plugin
+
+from .reg_mock import (LoggerMock, RegistryKeyMock, RegistryMock,
+                       RegistryValueMock)
 
 
 @pytest.fixture
@@ -31,6 +33,10 @@ def test_keyboard(mock_reg):
     p = plugin(mock_reg, LoggerMock(), "NTUSER.DAT", "-")
 
     results = list(p.run())
-    assert(len(results) == 2), "There should be two results"
-    assert(any([x.custom['substitute'] is not None for x in results])), "One of the results should have a substitution"
-    assert(any([x.custom['substitute'] is None for x in results])), "One of the results should NOT have a substitution"
+    assert len(results) == 2, "There should be two results"
+    assert any(
+        [x.custom["substitute"] is not None for x in results]
+    ), "One of the results should have a substitution"
+    assert any(
+        [x.custom["substitute"] is None for x in results]
+    ), "One of the results should NOT have a substitution"

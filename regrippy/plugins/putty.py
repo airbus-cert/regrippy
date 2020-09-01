@@ -1,5 +1,8 @@
 from regrippy import BasePlugin, mactime, PluginResult
-from Registry.Registry import RegistryKeyNotFoundException, RegistryValueNotFoundException
+from Registry.Registry import (
+    RegistryKeyNotFoundException,
+    RegistryValueNotFoundException,
+)
 
 
 class Plugin(BasePlugin):
@@ -11,7 +14,7 @@ class Plugin(BasePlugin):
         k = self.open_key(r"Software\SimonTatham\PuTTY")
         if not k:
             return
-        
+
         # SSH host keys
         try:
             ssh_host_keys = k.subkey("SshHostKeys")
@@ -27,7 +30,7 @@ class Plugin(BasePlugin):
                 yield r
         except RegistryKeyNotFoundException:
             self.warning("Could not find SshHostKeys subkey")
-        
+
         # Saved sessions
         try:
             sessions = k.subkey("Sessions")
@@ -47,17 +50,29 @@ class Plugin(BasePlugin):
                     self.warning(f"Malformed entry: {sess.name()}")
         except RegistryKeyNotFoundException:
             self.warning("Could not find Sessions subkey")
-        
+
     def display_human(self, res):
         if res.custom["type"] == "sshkey":
             print(f"[SSH KEY] {res.custom['host']}\t(key type: {res.custom['crypto']})")
         elif res.custom["type"] == "session":
-            print(f"[SESSION] \"{res.key_name}\" => {res.custom['host']}\t(protocol: {res.custom['protocol']})")
+            print(
+                f"[SESSION] \"{res.key_name}\" => {res.custom['host']}\t(protocol: {res.custom['protocol']})"
+            )
         else:
             self.error(f"Unknown result type: {res.custom['type']}")
-    
+
     def display_machine(self, res):
         if res.custom["type"] == "sshkey":
-            print(mactime(name=f"PuTTY SSH Key: {res.custom['host']} with {res.custom['crypto']}", mtime=res.mtime))
+            print(
+                mactime(
+                    name=f"PuTTY SSH Key: {res.custom['host']} with {res.custom['crypto']}",
+                    mtime=res.mtime,
+                )
+            )
         elif res.custom["type"] == "session":
-            print(mactime(name=f"PuTTY Session: {res.custom['host']} with {res.custom['protocol']}", mtime=res.mtime))
+            print(
+                mactime(
+                    name=f"PuTTY Session: {res.custom['host']} with {res.custom['protocol']}",
+                    mtime=res.mtime,
+                )
+            )

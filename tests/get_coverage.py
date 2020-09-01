@@ -5,7 +5,7 @@ import sys
 
 import pkg_resources
 
-RST_TEMPLATE="""
+RST_TEMPLATE = """
 Plugin test coverage
 ====================
 
@@ -27,8 +27,12 @@ PLUGINS_DIR = os.path.join("regrippy", "plugins")
 TESTS_DIR = "tests"
 
 if __name__ == "__main__":
-    all_plugins = [f for f in os.listdir(PLUGINS_DIR) if f.endswith(".py") and f != "__init__.py"]
-    all_tests = [f for f in os.listdir(TESTS_DIR) if f.startswith("test_") and f.endswith(".py")]
+    all_plugins = [
+        f for f in os.listdir(PLUGINS_DIR) if f.endswith(".py") and f != "__init__.py"
+    ]
+    all_tests = [
+        f for f in os.listdir(TESTS_DIR) if f.startswith("test_") and f.endswith(".py")
+    ]
 
     total = len(all_plugins)
     tested = 0
@@ -47,16 +51,16 @@ if __name__ == "__main__":
             color = "green"
         if ratio == 1.0:
             color = "brightgreen"
-        
+
         url = f"https://img.shields.io/badge/tests-{tested}%2F{total}-{color}.svg"
         print(url)
-        
+
     else:
         table_rows = []
 
         for plugin in all_plugins:
             test_name = "test_" + plugin
-            row = '   "' + plugin[:-len(".py")] + '",'
+            row = '   "' + plugin[: -len(".py")] + '",'
             if os.path.isfile(os.path.join(TESTS_DIR, test_name)):
                 row += "OK"
                 tested += 1
@@ -64,5 +68,9 @@ if __name__ == "__main__":
                 row += "MISSING"
 
             table_rows.append(row)
-        
-        print(RST_TEMPLATE.format(table="\n".join(table_rows), percent=int((tested/total)*100)))
+
+        print(
+            RST_TEMPLATE.format(
+                table="\n".join(table_rows), percent=int((tested / total) * 100)
+            )
+        )

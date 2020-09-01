@@ -8,10 +8,12 @@ class Plugin(BasePlugin):
     __REGHIVE__ = "NTUSER.DAT"
 
     def run(self):
-        k = self.open_key(r"Software\Microsoft\Windows\CurrentVersion\Internet Settings")
+        k = self.open_key(
+            r"Software\Microsoft\Windows\CurrentVersion\Internet Settings"
+        )
         if not k:
             return
-        
+
         r = PluginResult(key=k)
 
         r.custom["type"] = "proxy"
@@ -26,7 +28,7 @@ class Plugin(BasePlugin):
         r.custom["proxypac"] = self.safe_value(k, "AutoConfigURL", "N/A")
 
         yield r
-    
+
     def display_human(self, r):
         if r.custom["type"] == "proxy":
             print("[PROXY]")
@@ -37,7 +39,7 @@ class Plugin(BasePlugin):
             print("[AUTO-CONFIG]")
             print(f"\tProxyPac URL: {r.custom['proxypac']}")
         print()
-    
+
     def display_machine(self, r):
         print(mactime(name="Proxy settings modified", mtime=r.mtime))
 

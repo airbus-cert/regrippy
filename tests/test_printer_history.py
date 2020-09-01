@@ -1,10 +1,20 @@
-from .reg_mock import RegistryMock, RegistryKeyMock, RegistryValueMock, LoggerMock
-from Registry.Registry import RegDWord
 import pytest
+from Registry.Registry import RegDWord
 
 from regrippy.plugins.printer_history import Plugin
 
-PRINTERS = ["Microsoft Print To PDF", "Microsoft XPS Document Writer", "OneNote", "Fax", "Send To OneNote 2016", "MyEvilPrinter"]
+from .reg_mock import (LoggerMock, RegistryKeyMock, RegistryMock,
+                       RegistryValueMock)
+
+PRINTERS = [
+    "Microsoft Print To PDF",
+    "Microsoft XPS Document Writer",
+    "OneNote",
+    "Fax",
+    "Send To OneNote 2016",
+    "MyEvilPrinter",
+]
+
 
 @pytest.fixture
 def mock_reg():
@@ -23,7 +33,7 @@ def test_printer_history(mock_reg):
 
     results = list(p.run())
 
-    assert(len(results) == len(PRINTERS)), f"There should be {len(PRINTERS)} results"
+    assert len(results) == len(PRINTERS), f"There should be {len(PRINTERS)} results"
 
     for r in results:
-        assert(r.value_name in PRINTERS), "The printer name should be valid"
+        assert r.value_name in PRINTERS, "The printer name should be valid"

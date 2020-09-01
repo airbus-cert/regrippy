@@ -1,10 +1,24 @@
-from .reg_mock import RegistryMock, RegistryKeyMock, RegistryValueMock, LoggerMock
-from Registry.Registry import RegSZ
 import pytest
+from Registry.Registry import RegSZ
 
 from regrippy.plugins.printer_ports import Plugin
 
-PORTS = ["COM1:", "COM2:", "FILE1:", "LPT1:", "LPT2:", "Ne00:", "Ne01:", "nul:", "PORTPROMPT:", "C:\\Windows\\System32\\hello.dll"]
+from .reg_mock import (LoggerMock, RegistryKeyMock, RegistryMock,
+                       RegistryValueMock)
+
+PORTS = [
+    "COM1:",
+    "COM2:",
+    "FILE1:",
+    "LPT1:",
+    "LPT2:",
+    "Ne00:",
+    "Ne01:",
+    "nul:",
+    "PORTPROMPT:",
+    "C:\\Windows\\System32\\hello.dll",
+]
+
 
 @pytest.fixture
 def mock_reg():
@@ -23,7 +37,7 @@ def test_printer_ports(mock_reg):
 
     results = list(p.run())
 
-    assert(len(results) == len(PORTS)), f"There should be {len(PORTS)} results"
+    assert len(results) == len(PORTS), f"There should be {len(PORTS)} results"
 
     for r in results:
-        assert(r.value_name in PORTS), "The printer port should be valid"
+        assert r.value_name in PORTS, "The printer port should be valid"

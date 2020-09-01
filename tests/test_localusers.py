@@ -1,8 +1,10 @@
-from .reg_mock import RegistryMock, RegistryKeyMock, LoggerMock
-from Registry.Registry import RegBin
 import pytest
+from Registry.Registry import RegBin
 
 from regrippy.plugins.localusers import Plugin as plugin
+
+from .reg_mock import LoggerMock, RegistryKeyMock, RegistryMock
+
 
 @pytest.fixture
 def mock_reg():
@@ -22,9 +24,11 @@ def test_localusers(mock_reg):
     p = plugin(mock_reg, LoggerMock(), "SAM", "-")
 
     results = list(p.run())
-    assert(len(results) == 2), "There should be two results"
-    
-    assert(any([x.key_name == "JohnDoe" for x in results])), "There should be a user named 'JohnDoe'"
-    assert(any([x.key_name == "JaneDoe" for x in results])), "There should be a user named 'JaneDoe'"
+    assert len(results) == 2, "There should be two results"
 
-
+    assert any(
+        [x.key_name == "JohnDoe" for x in results]
+    ), "There should be a user named 'JohnDoe'"
+    assert any(
+        [x.key_name == "JaneDoe" for x in results]
+    ), "There should be a user named 'JaneDoe'"

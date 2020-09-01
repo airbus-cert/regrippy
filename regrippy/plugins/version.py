@@ -3,6 +3,7 @@ from regrippy import BasePlugin, PluginResult
 
 class Plugin(BasePlugin):
     """Get the Windows version"""
+
     __REGHIVE__ = "SOFTWARE"
 
     def run(self):
@@ -12,6 +13,6 @@ class Plugin(BasePlugin):
 
         value = key.value("ProductName")
         yield PluginResult(key=key, value=value)
-    
+
     def display_human(self, result):
         print(result.value_data)

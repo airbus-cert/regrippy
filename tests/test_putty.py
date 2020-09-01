@@ -1,8 +1,10 @@
-from .reg_mock import RegistryMock, RegistryKeyMock, RegistryValueMock, LoggerMock
-from Registry.Registry import RegSZ
 import pytest
+from Registry.Registry import RegSZ
 
 from regrippy.plugins.putty import Plugin
+
+from .reg_mock import (LoggerMock, RegistryKeyMock, RegistryMock,
+                       RegistryValueMock)
 
 
 @pytest.fixture
@@ -24,7 +26,9 @@ def mock_reg():
     ssh_hosts = RegistryKeyMock("SshHostKeys", key)
     key.add_child(ssh_hosts)
 
-    ssh_hosts.add_value(RegistryValueMock("ecdsa@22:evil-server.eu", "0xbadc00ffee", RegSZ))
+    ssh_hosts.add_value(
+        RegistryValueMock("ecdsa@22:evil-server.eu", "0xbadc00ffee", RegSZ)
+    )
 
     return reg
 
@@ -44,8 +48,14 @@ def test_putty(mock_reg):
     host_key = host_keys[0]
 
     assert session.key_name == "MySSH", "The session's name should be 'MySSH'"
-    assert session.custom["host"] == "my-ssh-server.com", "The session should point to my-ssh-server.com"
+    assert (
+        session.custom["host"] == "my-ssh-server.com"
+    ), "The session should point to my-ssh-server.com"
     assert session.custom["protocol"] == "ssh", "The session should be using SSH"
 
-    assert host_key.custom["crypto"] == "ecdsa", "Host key should be detected as 'ecdsa'"
-    assert host_key.custom["host"] == "22:evil-server.eu", "Host for the saved key should be 'evil-server.eu'"
+    assert (
+        host_key.custom["crypto"] == "ecdsa"
+    ), "Host key should be detected as 'ecdsa'"
+    assert (
+        host_key.custom["host"] == "22:evil-server.eu"
+    ), "Host for the saved key should be 'evil-server.eu'"

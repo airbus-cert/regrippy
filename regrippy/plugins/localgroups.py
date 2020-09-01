@@ -53,13 +53,17 @@ class Plugin(BasePlugin):
             sid = "{0}-{1}".format(machine_sid, subkey.value("(default)").value_type())
             # User names are stored inside Names' subkeys; each subkey's name holds the associated user name.
             name = subkey.name()
-            if not any(profile.get("sid", None) == sid for profile in self.user_profile_list):
+            if not any(
+                profile.get("sid", None) == sid for profile in self.user_profile_list
+            ):
                 self.user_profile_list.append({"sid": sid, "name": name})
         return
 
     def user_sids_soft(self):
         """Gets user SIDs from the SOFTWARE hive"""
-        key_profiles = self.open_key("Microsoft\\Windows NT\\CurrentVersion\\ProfileList")
+        key_profiles = self.open_key(
+            "Microsoft\\Windows NT\\CurrentVersion\\ProfileList"
+        )
         if not key_profiles:
             return
         for subkey in key_profiles.subkeys():
@@ -67,7 +71,9 @@ class Plugin(BasePlugin):
             sid = subkey.name()
             # The "profile path" points to the user folder; we can use it to map the SID to the user
             name = subkey.value("ProfileImagePath").value().rpartition("\\")[2]
-            if not any(profile.get("sid", None) == sid for profile in self.user_profile_list):
+            if not any(
+                profile.get("sid", None) == sid for profile in self.user_profile_list
+            ):
                 self.user_profile_list.append({"sid": sid, "name": name})
         return
 
@@ -111,8 +117,12 @@ class Plugin(BasePlugin):
 
                 res = PluginResult(key=subkey, value=None)
                 res.custom = {
-                    "name": c_data[c_gname_off : c_gname_off + c_gname_len].decode("utf-16-le"),
-                    "desc": c_data[c_gdesc_off : c_gdesc_off + c_gdesc_len].decode("utf-16-le"),
+                    "name": c_data[c_gname_off : c_gname_off + c_gname_len].decode(
+                        "utf-16-le"
+                    ),
+                    "desc": c_data[c_gdesc_off : c_gdesc_off + c_gdesc_len].decode(
+                        "utf-16-le"
+                    ),
                     "size": c_gmembers_size,
                     "member_sids": member_sid_list,
                 }

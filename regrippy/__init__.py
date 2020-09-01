@@ -2,12 +2,38 @@ import os
 from Registry import Registry
 
 
-def mactime(md5="0", name="", inode=0, mode_as_string="", uid=0, gid=0, size=0, atime=-1, mtime=-1, ctime=-1, btime=-1):
+def mactime(
+    md5="0",
+    name="",
+    inode=0,
+    mode_as_string="",
+    uid=0,
+    gid=0,
+    size=0,
+    atime=-1,
+    mtime=-1,
+    ctime=-1,
+    btime=-1,
+):
     """Formats and returns a Bodyfile-format line.
     All parameters are optional
     """
 
-    return "|".join([md5, name, str(inode), mode_as_string, str(uid), str(gid), str(size), str(atime), str(mtime), str(ctime), str(btime)])
+    return "|".join(
+        [
+            md5,
+            name,
+            str(inode),
+            mode_as_string,
+            str(uid),
+            str(gid),
+            str(size),
+            str(atime),
+            str(mtime),
+            str(ctime),
+            str(btime),
+        ]
+    )
 
 
 class BasePlugin(object):

@@ -6,11 +6,17 @@ from regrippy.thirdparty.ShimCacheParser import read_cache
 
 class Plugin(BasePlugin):
     """Parse shim cache to show all executed binaries on machine"""
+
     __REGHIVE__ = "SYSTEM"
 
     def run(self):
-        key = self.open_key(self.get_currentcontrolset_path() + r"\Control\Session Manager\AppCompatCache") or \
-              self.open_key(self.get_currentcontrolset_path() + r"\Control\Session Manager\AppCompatibility")
+        key = self.open_key(
+            self.get_currentcontrolset_path()
+            + r"\Control\Session Manager\AppCompatCache"
+        ) or self.open_key(
+            self.get_currentcontrolset_path()
+            + r"\Control\Session Manager\AppCompatibility"
+        )
 
         if not key:
             return

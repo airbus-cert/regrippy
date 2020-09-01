@@ -1,8 +1,11 @@
-from .reg_mock import RegistryMock, RegistryKeyMock, RegistryValueMock, LoggerMock
-from Registry.Registry import RegSZ
 import pytest
+from Registry.Registry import RegSZ
 
-from regrippy.plugins.rdphint import Plugin  as plugin
+from regrippy.plugins.rdphint import Plugin as plugin
+
+from .reg_mock import (LoggerMock, RegistryKeyMock, RegistryMock,
+                       RegistryValueMock)
+
 
 @pytest.fixture
 def mock_reg():
@@ -23,11 +26,11 @@ def mock_reg():
 
 def test_rdphint(mock_reg):
     p = plugin(mock_reg, LoggerMock(), "NTUSER.DAT", "-")
-    
+
     results = list(p.run())
 
-    assert(len(results) == 2), "There should only be 2 results"
-    assert(results[0].key_name == "server1.com"), "First server should be server1.com"
-    assert(results[0].custom["username"] == "root"), "First server should have user hint"
-    assert(results[1].key_name == "server2.com"), "Second server should be server2.com"
-    assert(results[1].custom["username"] == ""), "Second server should not have username"
+    assert len(results) == 2, "There should only be 2 results"
+    assert results[0].key_name == "server1.com", "First server should be server1.com"
+    assert results[0].custom["username"] == "root", "First server should have user hint"
+    assert results[1].key_name == "server2.com", "Second server should be server2.com"
+    assert results[1].custom["username"] == "", "Second server should not have username"

@@ -1,8 +1,11 @@
-from .reg_mock import RegistryMock, RegistryKeyMock, RegistryValueMock, LoggerMock
-from Registry.Registry import RegSZ
 import pytest
+from Registry.Registry import RegSZ
 
-from regrippy.plugins.timezone import Plugin  as plugin
+from regrippy.plugins.timezone import Plugin as plugin
+
+from .reg_mock import (LoggerMock, RegistryKeyMock, RegistryMock,
+                       RegistryValueMock)
+
 
 @pytest.fixture
 def mock_reg():
@@ -21,6 +24,10 @@ def test_timezone(mock_reg):
 
     results = list(p.run())
 
-    assert(len(results) == 1), "There should be a single result"
-    assert(results[0].value_name == "TimeZoneKeyName"), "It should have found the TimeZoneKeyName value"
-    assert(results[0].value_data == "SampleTimezone"), "It should have fetched the correct timezone value"
+    assert len(results) == 1, "There should be a single result"
+    assert (
+        results[0].value_name == "TimeZoneKeyName"
+    ), "It should have found the TimeZoneKeyName value"
+    assert (
+        results[0].value_data == "SampleTimezone"
+    ), "It should have fetched the correct timezone value"

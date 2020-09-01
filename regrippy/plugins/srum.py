@@ -12,7 +12,6 @@ class Plugin(BasePlugin):
             return
 
         for extension_key in key.subkeys():
-            v  = extension_key.value("(default)")
+            v = extension_key.value("(default)")
             res = PluginResult(key=extension_key, value=v)
             yield res
-

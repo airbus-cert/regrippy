@@ -1,8 +1,11 @@
-from .reg_mock import RegistryMock, RegistryKeyMock, RegistryValueMock, LoggerMock
-from Registry.Registry import RegSZ
 import pytest
+from Registry.Registry import RegSZ
 
-from regrippy.plugins.portproxy import Plugin  as plugin
+from regrippy.plugins.portproxy import Plugin as plugin
+
+from .reg_mock import (LoggerMock, RegistryKeyMock, RegistryMock,
+                       RegistryValueMock)
+
 
 @pytest.fixture
 def mock_reg():
@@ -30,14 +33,21 @@ def test_portproxy(mock_reg):
 
     results = list(p.run())
 
-    assert(len(results) == 2), "There should be 2 results"
-    
+    assert len(results) == 2, "There should be 2 results"
+
     for result in results:
-        assert(result.custom["proto"] in ["tcp", "udp"]), "The protocol should be either tcp or udp"
+        assert result.custom["proto"] in [
+            "tcp",
+            "udp",
+        ], "The protocol should be either tcp or udp"
 
         if result.custom["proto"] == "tcp":
-            assert(result.value_name == "*/443"), "The TCP portproxy FROM should be 443"
-            assert(result.value_data == "127.0.0.1:1234"), "The TCP portproxy TO should be 127.0.0.1:1234"
-        else: # UDP
-            assert(result.value_name == "*/53"), "The UDP portproxy FROM should be 53"
-            assert(result.value_data == "8.8.8.8:80"), "The UDP portproxy TO should be 8.8.8.8:80"
+            assert result.value_name == "*/443", "The TCP portproxy FROM should be 443"
+            assert (
+                result.value_data == "127.0.0.1:1234"
+            ), "The TCP portproxy TO should be 127.0.0.1:1234"
+        else:  # UDP
+            assert result.value_name == "*/53", "The UDP portproxy FROM should be 53"
+            assert (
+                result.value_data == "8.8.8.8:80"
+            ), "The UDP portproxy TO should be 8.8.8.8:80"

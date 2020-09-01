@@ -1,8 +1,11 @@
-from .reg_mock import RegistryMock, RegistryKeyMock, RegistryValueMock, LoggerMock
-from Registry.Registry import RegSZ, RegBin
 import pytest
+from Registry.Registry import RegBin, RegSZ
 
-from regrippy.plugins.version import Plugin  as plugin
+from regrippy.plugins.version import Plugin as plugin
+
+from .reg_mock import (LoggerMock, RegistryKeyMock, RegistryMock,
+                       RegistryValueMock)
+
 
 @pytest.fixture
 def mock_reg():
@@ -20,5 +23,5 @@ def test_version(mock_reg):
 
     results = list(p.run())
 
-    assert(len(results) == 1), "There should be a single result"
-    assert(results[0].value_data == "ENCOM OS-12"), "The retrieved version should match"
+    assert len(results) == 1, "There should be a single result"
+    assert results[0].value_data == "ENCOM OS-12", "The retrieved version should match"

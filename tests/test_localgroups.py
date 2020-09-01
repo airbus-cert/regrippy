@@ -1,9 +1,12 @@
 from binascii import unhexlify
-from .reg_mock import RegistryMock, RegistryKeyMock, RegistryValueMock, LoggerMock
-from Registry.Registry import RegBin, RegExpandSZ
+
 import pytest
+from Registry.Registry import RegBin, RegExpandSZ
 
 from regrippy.plugins.localgroups import Plugin as plugin
+
+from .reg_mock import (LoggerMock, RegistryKeyMock, RegistryMock,
+                       RegistryValueMock)
 
 
 @pytest.fixture
@@ -12,13 +15,19 @@ def mock_software():
     reg = RegistryMock("SOFTWARE", "software", key.root())
 
     user1 = RegistryKeyMock("S-1-5-21-2000-2000-2000-1001", key)
-    user1profile = RegistryValueMock("ProfileImagePath", "C:\\Users\\Arioch", RegExpandSZ)
+    user1profile = RegistryValueMock(
+        "ProfileImagePath", "C:\\Users\\Arioch", RegExpandSZ
+    )
     user1.add_value(user1profile)
     user2 = RegistryKeyMock("S-1-5-21-2000-2000-2000-1002", key)
-    user2profile = RegistryValueMock("ProfileImagePath", "C:\\Users\\Elric", RegExpandSZ)
+    user2profile = RegistryValueMock(
+        "ProfileImagePath", "C:\\Users\\Elric", RegExpandSZ
+    )
     user2.add_value(user2profile)
     user3 = RegistryKeyMock("S-1-5-21-424242-424242-424242-1337", key)
-    user3profile = RegistryValueMock("ProfileImagePath", "C:\\Users\\Corum", RegExpandSZ)
+    user3profile = RegistryValueMock(
+        "ProfileImagePath", "C:\\Users\\Corum", RegExpandSZ
+    )
     user3.add_value(user3profile)
 
     key.add_child(user1)
@@ -178,12 +187,22 @@ def test_localgroups(mock_software, mock_sam):
     p = plugin(mock_software, LoggerMock(), "SOFTWARE", "-")
     results = list(p.run())
 
-    assert len(results) == 0, "SOFTWARE run only builds internal data, yields no results"
+    assert (
+        len(results) == 0
+    ), "SOFTWARE run only builds internal data, yields no results"
 
-    assert len(p.user_profile_list) == 3, "Three profiles should be parsed from the SOFTWARE hive"
-    assert(any([profile["name"] == "Arioch" for profile in p.user_profile_list])), "There should be a user named \"Arioch\""
-    assert(any([profile["name"] == "Elric" for profile in p.user_profile_list])), "There should be a user named \"Elric\""
-    assert(any([profile["name"] == "Corum" for profile in p.user_profile_list])), "There should be a user named \"Corum\""
+    assert (
+        len(p.user_profile_list) == 3
+    ), "Three profiles should be parsed from the SOFTWARE hive"
+    assert any(
+        [profile["name"] == "Arioch" for profile in p.user_profile_list]
+    ), 'There should be a user named "Arioch"'
+    assert any(
+        [profile["name"] == "Elric" for profile in p.user_profile_list]
+    ), 'There should be a user named "Elric"'
+    assert any(
+        [profile["name"] == "Corum" for profile in p.user_profile_list]
+    ), 'There should be a user named "Corum"'
 
     # SAM
     p = plugin(mock_sam, LoggerMock(), "SAM", "-")
@@ -192,18 +211,30 @@ def test_localgroups(mock_software, mock_sam):
     assert len(results) == 2, "SAM should contains 2 groups"
 
     group_admins = results[0].custom
-    assert group_admins["name"] == "Administrateurs", "Group 1 should be \"Administrateurs\""
-    assert group_admins["size"] == 3, "The \"Administrateurs\" group should have three members"
+    assert (
+        group_admins["name"] == "Administrateurs"
+    ), 'Group 1 should be "Administrateurs"'
+    assert (
+        group_admins["size"] == 3
+    ), 'The "Administrateurs" group should have three members'
     user_sid_list = group_admins["member_sids"]
-    assert len(user_sid_list) == 3, "The \"Administrateurs\" groups should have three members"
-    assert user_sid_list[0] == "S-1-5-21-2000-2000-2000-500", "User 1 should be local SID + RID 500"
-    assert user_sid_list[1] == "S-1-5-21-2000-2000-2000-1001", "User 2 should be local SID + RID 1001"
-    assert user_sid_list[2] == "S-1-5-21-424242-424242-424242-1337", "User 3 should be \"domain\" SID + RID 1337"
+    assert (
+        len(user_sid_list) == 3
+    ), 'The "Administrateurs" groups should have three members'
+    assert (
+        user_sid_list[0] == "S-1-5-21-2000-2000-2000-500"
+    ), "User 1 should be local SID + RID 500"
+    assert (
+        user_sid_list[1] == "S-1-5-21-2000-2000-2000-1001"
+    ), "User 2 should be local SID + RID 1001"
+    assert (
+        user_sid_list[2] == "S-1-5-21-424242-424242-424242-1337"
+    ), 'User 3 should be "domain" SID + RID 1337'
 
     group_users = results[1].custom
-    assert group_users["name"] == "Utilisateurs", "Group 2 should be \"Utilisateurs\""
-    assert group_users["size"] == 2, "The \"Utilisateurs\" group should have two members"
+    assert group_users["name"] == "Utilisateurs", 'Group 2 should be "Utilisateurs"'
+    assert group_users["size"] == 2, 'The "Utilisateurs" group should have two members'
     user_sid_list = group_users["member_sids"]
-    assert len(user_sid_list) == 2, "The \"Utilisateurs\" groups should have two members"
+    assert len(user_sid_list) == 2, 'The "Utilisateurs" groups should have two members'
     assert user_sid_list[0] == "S-1-5-4", "User 1 should be local well-known SID 4"
     assert user_sid_list[1] == "S-1-5-11", "User 2 should be local well-known SID 11"

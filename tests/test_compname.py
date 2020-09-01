@@ -1,8 +1,10 @@
-from .reg_mock import RegistryMock, RegistryKeyMock, RegistryValueMock, LoggerMock
-from Registry.Registry import RegSZ
 import pytest
+from Registry.Registry import RegSZ
 
-from regrippy.plugins.compname import Plugin  as plugin
+from regrippy.plugins.compname import Plugin as plugin
+
+from .reg_mock import (LoggerMock, RegistryKeyMock, RegistryMock,
+                       RegistryValueMock)
 
 
 @pytest.fixture
@@ -22,5 +24,7 @@ def test_compname(mock_reg):
 
     results = list(p.run())
 
-    assert(len(results) == 1), "There should be a single result"
-    assert(results[0].value_data == "MyCoolPC"), "The extracted computer name should match 'MyCoolPC'"
+    assert len(results) == 1, "There should be a single result"
+    assert (
+        results[0].value_data == "MyCoolPC"
+    ), "The extracted computer name should match 'MyCoolPC'"

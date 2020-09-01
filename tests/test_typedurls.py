@@ -1,8 +1,11 @@
-from .reg_mock import RegistryMock, RegistryKeyMock, RegistryValueMock, LoggerMock
-from Registry.Registry import RegSZ
 import pytest
+from Registry.Registry import RegSZ
 
-from regrippy.plugins.typedurls import Plugin  as plugin
+from regrippy.plugins.typedurls import Plugin as plugin
+
+from .reg_mock import (LoggerMock, RegistryKeyMock, RegistryMock,
+                       RegistryValueMock)
+
 
 @pytest.fixture
 def mock_reg():
@@ -23,6 +26,8 @@ def test_typedurls(mock_reg):
 
     results = list(p.run())
 
-    assert(len(results) == 2)
-    assert(results[0].value_data == "https://outlook.com"), "First URL should be Outlook"
-    assert(results[1].value_data == "https://airbus.com/order"), "Second URL should be Airbus"
+    assert len(results) == 2
+    assert results[0].value_data == "https://outlook.com", "First URL should be Outlook"
+    assert (
+        results[1].value_data == "https://airbus.com/order"
+    ), "Second URL should be Airbus"
