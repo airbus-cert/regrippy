@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 import argparse
+import logging
 import os
 import sys
-import logging
 
 import pkg_resources
 from Registry import Registry
@@ -59,7 +59,13 @@ def get_hive_paths(args, hive_name):
             else None,
             os.getenv("REG_SYSTEM"),
         )
-        return [path] if path else None
+        result = [path] if path else None
+        if args.backups and path:
+            parent = os.path.dirname(path)
+            regback = find_path_nocase(parent, ["regback", "system"])
+            if regback:
+                result.append(regback)
+        return result
     elif hive_name.lower() == "software":
         path = first(
             args.software,
@@ -68,7 +74,13 @@ def get_hive_paths(args, hive_name):
             else None,
             os.getenv("REG_SOFTWARE"),
         )
-        return [path] if path else None
+        result = [path] if path else None
+        if args.backups and path:
+            parent = os.path.dirname(path)
+            regback = find_path_nocase(parent, ["regback", "software"])
+            if regback:
+                result.append(regback)
+        return result
     elif hive_name.lower() == "sam":
         path = first(
             args.sam,
@@ -77,13 +89,31 @@ def get_hive_paths(args, hive_name):
             else None,
             os.getenv("REG_SAM"),
         )
-        return [path] if path else None
+        result = [path] if path else None
+        if args.backups and path:
+            parent = os.path.dirname(path)
+            regback = find_path_nocase(parent, ["regback", "sam"])
+            if regback:
+                result.append(regback)
+        return result
     elif hive_name.lower() == "ntuser.dat" and not args.all_user_hives:
         path = first(args.ntuser, os.getenv("REG_NTUSER"))
-        return [path] if path else None
+        result = [path] if path else None
+        if args.backups and path:
+            parent = os.path.dirname(path)
+            regback = find_path_nocase(parent, ["ntuser.dat.old"])
+            if regback:
+                result.append(regback)
+        return result
     elif hive_name.lower() == "usrclass.dat" and not args.all_user_hives:
         path = first(args.usrclass, os.getenv("REG_USRCLASS"))
-        return [path] if path else None
+        result = [path] if path else None
+        if args.backups and path:
+            parent = os.path.dirname(path)
+            regback = find_path_nocase(parent, ["usrclass.dat.old"])
+            if regback:
+                result.append(regback)
+        return result
 
     # All user hives
     elif hive_name.lower() in ["ntuser.dat", "usrclass.dat"] and args.all_user_hives:
@@ -98,21 +128,32 @@ def get_hive_paths(args, hive_name):
             raise RuntimeError("Could not find the Users folder")
 
         for user_dir in os.listdir(users_folder):
-            if not os.path.isdir(os.path.join(users_folder, user_dir)):
+            current_user_dir = os.path.join(users_folder, user_dir)
+            if not os.path.isdir(current_user_dir):
                 continue
             if hive_name.lower() == "ntuser.dat":
                 path = find_path_nocase(
-                    os.path.join(users_folder, user_dir), ["ntuser.dat"]
+                    current_user_dir, ["ntuser.dat"]
                 )
                 if path is not None:
                     hive_paths.append(path)
+
+                    if args.backup:
+                        backup = find_path_nocase(current_user_dir, ["ntuser.dat.old"])
+                        if backup:
+                            hive_paths.append(backup)
             else:
                 path = find_path_nocase(
-                    users_folder,
+                    current_user_dir,
                     ["appdata", "local", "microsoft", "windows", "usrclass.dat"],
                 )
                 if path is not None:
                     hive_paths.append(path)
+
+                    if args.backup:
+                        backup = find_path_nocase(current_user_dir, ["appdata", "local", "microsoft", "windows", "usrclass.dat.old"])
+                        if backup:
+                            hive_paths.append(backup)
 
         return hive_paths
 
@@ -202,6 +243,11 @@ def main():
         "--all-user-hives",
         help="Work on all NTUSER.DAT and USRCLASS.DAT hives if required. Requires --root. Overrides --ntuser and --usrclass.",
         action="store_true",
+    )
+    parser.add_argument(
+        "--backups",
+        action="store_true",
+        help="Run the plugin on backup registry hives as well (does not work for hives loaded from stdin)",
     )
     parser.add_argument("--verbose", "-v", help="Be more verbose", action="store_true")
     parser.add_argument(
