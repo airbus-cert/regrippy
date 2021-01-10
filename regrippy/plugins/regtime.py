@@ -12,7 +12,10 @@ class Plugin(BasePlugin):
         yield from self.dump(key)
 
     def dump(self, key):
-        res = PluginResult(key=key)
+        res = PluginResult(
+            timestamp=key.timestamp(),
+            key_name=key.name(),
+            path=key.path())
         res.path = self.cleanup_path(res.path)
         yield res
 
