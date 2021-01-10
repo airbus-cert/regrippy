@@ -1,5 +1,12 @@
 import os
+import sys
+from datetime import datetime
+
 from Registry import Registry
+
+try:
+    import elasticsearch_dsl
+except:pass
 
 
 def mactime(
@@ -129,13 +136,16 @@ class BasePlugin(object):
         """
         print(mactime(name=result.path, mtime=result.mtime))
 
-    def display_elasticsearch(self, result):
+    def display_elasticsearch(self, result, index):
         """Inserts a result into an elasticsearch instance
 
         :param result: the result to display
         :type result: regrip.PluginResult
         """
-        raise NotImplementedError("this plugin does not support elasticsearch output")
+        if 'elasticsearch_dsl' in sys.modules:
+            result.save(index=index)
+        else:
+            raise NotImplementedError('module elasticsearch_dsl is required to do this')
 
     def warning(self, msg):
         """Logs a message at WARNING level"""
@@ -150,7 +160,7 @@ class BasePlugin(object):
         self.logger.info(msg)
 
 
-class PluginResult(object):
+class SimplePluginResult(object):
     """A class which holds a single result of a plugin execution
 
     :ivar dict custom: a `dict` you can use to store custom data for your result
@@ -165,27 +175,45 @@ class PluginResult(object):
     :ivar value_data: the actual value data. The variable type depends on the type of the value.
     """
 
-    def __init__(self, *, key=None, value=None):
-        self._key = key
-        self._value = value
+    def __init__(self, **kwargs):
+        self._key = kwargs['key']
+        self._value = kwargs['value']
 
-        self.custom = {}
+        self.custom = kwargs.get('custom') or dict()
 
-        self.path = None
-        self.mtime = 0
-        self.atime = 0
-        self.ctime = 0
-        self.btime = 0
-        self.value_type = None
-        self.value_name = None
-        self.value_data = None
+        self.path = kwargs.get('path')
+        self.mtime = kwargs.get('mtime') or 0
+        self.atime = kwargs.get('atime') or 0
+        self.ctime = kwargs.get('ctime') or 0
+        self.btime = kwargs.get('btime') or 0
+        self.value_type = kwargs.get('value_type')
+        self.value_name = kwargs.get('value_name')
+        self.value_data = kwargs.get('value_data')
 
-        if key:
-            self.path = key.path()
-            self.mtime = int(key.timestamp().timestamp())
-            self.key_name = key.name()
+        if 'key' in kwargs:
+            self.path = kwargs['key'].path()
+            self.mtime = int(kwargs['key'].timestamp().timestamp())
+            self.key_name = kwargs['key'].name()
 
-        if value:
-            self.value_name = value.name()
-            self.value_type = value.value_type_str()
-            self.value_data = value.value()
+        if 'value' in kwargs:
+            self.value_name = kwargs['value'].name()
+            self.value_type = kwargs['value'].value_type_str()
+            self.value_data = kwargs['value'].value()
+
+class ElasticPluginResult(elasticsearch_dsl.Document):
+    """A class which holds a single result of a plugin execution """
+
+    timestamp = elasticsearch_dsl.Date()
+    mtime = elasticsearch_dsl.Date()
+    atime = elasticsearch_dsl.Date()
+    ctime = elasticsearch_dsl.Date()
+    btime = elasticsearch_dsl.Date()
+    path = elasticsearch_dsl.Text()
+    key_name = elasticsearch_dsl.Text()
+    value_type = elasticsearch_dsl.Keyword()
+    value_name = elasticsearch_dsl.Text()
+    value_data = elasticsearch_dsl.Text()
+    custom = elasticsearch_dsl.Nested()
+    plugin = elasticsearch_dsl.Keyword()
+
+PluginResult = ElasticPluginResult if 'elasticsearch_dsl' in sys.modules else SimplePluginResult

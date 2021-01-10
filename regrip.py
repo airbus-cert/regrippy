@@ -198,6 +198,7 @@ if 'elasticsearch_dsl' in sys.modules:
                 logger.warning("adding values to existing index '{index}'".format(index=index))
                 return
         assert not i.exists()
+        logger.warning("creating index '{index}'".format(index=index))
         i.create()
 
 
@@ -329,7 +330,7 @@ def main():
                     if args.bodyfile:
                         p.display_machine(result)
                     elif args.elasticsearch:
-                        p.display_elasticsearch(result)
+                        p.display_elasticsearch(result, index=args.elasticsearch)
                     else:
                         if hive_name == "NTUSER.DAT":
                             print(f"[.] User: {p.guess_username()}")
