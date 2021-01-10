@@ -8,6 +8,10 @@ import sys
 import pkg_resources
 from Registry import Registry
 
+try:
+    import elasticsearch_dsl
+except:pass
+
 logging.basicConfig()
 l = logging.getLogger("regrippy")
 l.setLevel("ERROR")
@@ -182,6 +186,21 @@ def load_plugin(plugin_name):
     raise ValueError(f"No such plugin: {plugin_name}")
 
 
+if 'elasticsearch_dsl' in sys.modules:
+    def create_index(index: str, override: bool):
+        logger = logging.getLogger()
+        i = elasticsearch_dsl.Index(name=index)
+        if i.exists():
+            if override:
+                logger.warning("deleting index '{index}'".format(index=index))
+                i.delete()
+            else:
+                raise ValueError("index '{index}' exists already, "
+                                 "you must specify '--override' to override this index".format(index=index))
+        assert not i.exists()
+        i.create()
+
+
 def main():
     if os.path.basename(sys.argv[0]).lower() != "regrip.py":
         # Issue #5: allow selecting plugins based on argv[0]
@@ -253,9 +272,13 @@ def main():
     parser.add_argument(
         "--bodyfile", "-b", help="Force output in Bodyfile format", action="store_true"
     )
-    parser.add_argument(
-        "--elasticsearch", "-e", help="Force output to elasticsearch", action="store_true"
-    )
+    if 'elasticsearch_dsl' in sys.modules:
+        parser.add_argument(
+            "--elasticsearch", help="Name of elasticsearch index to write to", type=str
+        )
+        parser.add_argument(
+            "--override", help="Override existing index", action="store_true"
+        )
     parser.add_argument(
         "--list", "-l", help="List available plugins", action="store_true"
     )
@@ -280,6 +303,10 @@ def main():
         hive_names = [plugin.__REGHIVE__]
     else:
         hive_names = plugin.__REGHIVE__
+
+    if args.elasticsearch:
+        elasticsearch_dsl.connections.create_connection(hosts=['localhost'], timeout=20)
+        create_index(index=args.elasticsearch, override=args.override)
 
     for hive_name in hive_names:
         hive_paths = get_hive_paths(args, hive_name)

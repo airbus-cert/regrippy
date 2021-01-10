@@ -1,2 +1,4 @@
 wheel
 python-registry
+
+elasticsearch_dsl
