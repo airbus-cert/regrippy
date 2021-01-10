@@ -195,8 +195,8 @@ if 'elasticsearch_dsl' in sys.modules:
                 logger.warning("deleting index '{index}'".format(index=index))
                 i.delete()
             else:
-                raise ValueError("index '{index}' exists already, "
-                                 "you must specify '--override' to override this index".format(index=index))
+                logger.warning("adding values to existing index '{index}'".format(index=index))
+                return
         assert not i.exists()
         i.create()
 
