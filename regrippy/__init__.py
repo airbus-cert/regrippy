@@ -129,6 +129,14 @@ class BasePlugin(object):
         """
         print(mactime(name=result.path, mtime=result.mtime))
 
+    def display_elasticsearch(self, result):
+        """Inserts a result into an elasticsearch instance
+
+        :param result: the result to display
+        :type result: regrip.PluginResult
+        """
+        raise NotImplementedError("this plugin does not support elasticsearch output")
+
     def warning(self, msg):
         """Logs a message at WARNING level"""
         self.logger.warning(msg)

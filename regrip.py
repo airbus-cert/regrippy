@@ -254,6 +254,9 @@ def main():
         "--bodyfile", "-b", help="Force output in Bodyfile format", action="store_true"
     )
     parser.add_argument(
+        "--elasticsearch", "-e", help="Force output to elasticsearch", action="store_true"
+    )
+    parser.add_argument(
         "--list", "-l", help="List available plugins", action="store_true"
     )
 
@@ -298,6 +301,8 @@ def main():
                 for result in results:
                     if args.bodyfile:
                         p.display_machine(result)
+                    elif args.elasticsearch:
+                        p.display_elasticsearch(result)
                     else:
                         if hive_name == "NTUSER.DAT":
                             print(f"[.] User: {p.guess_username()}")
