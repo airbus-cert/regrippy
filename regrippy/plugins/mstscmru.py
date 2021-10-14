@@ -14,9 +14,13 @@ class Plugin(BasePlugin):
         for value in key.values():
             res = PluginResult(key=key, value=value)
             yield res
-    
+
     def display_human(self, result):
         print(result.value_data)
-    
+
     def display_machine(self, result):
-        print(mactime(name=f"{self.guess_username()}\t{result.value_data}", mtime=result.mtime))
+        print(
+            mactime(
+                name=f"{self.guess_username()}\t{result.value_data}", mtime=result.mtime
+            )
+        )

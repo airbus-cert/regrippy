@@ -132,9 +132,7 @@ def get_hive_paths(args, hive_name):
             if not os.path.isdir(current_user_dir):
                 continue
             if hive_name.lower() == "ntuser.dat":
-                path = find_path_nocase(
-                    current_user_dir, ["ntuser.dat"]
-                )
+                path = find_path_nocase(current_user_dir, ["ntuser.dat"])
                 if path is not None:
                     hive_paths.append(path)
 
@@ -151,7 +149,16 @@ def get_hive_paths(args, hive_name):
                     hive_paths.append(path)
 
                     if args.backups:
-                        backup = find_path_nocase(current_user_dir, ["appdata", "local", "microsoft", "windows", "usrclass.dat.old"])
+                        backup = find_path_nocase(
+                            current_user_dir,
+                            [
+                                "appdata",
+                                "local",
+                                "microsoft",
+                                "windows",
+                                "usrclass.dat.old",
+                            ],
+                        )
                         if backup:
                             hive_paths.append(backup)
 

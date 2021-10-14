@@ -1,8 +1,11 @@
-from .reg_mock import RegistryMock, RegistryKeyMock, RegistryValueMock, LoggerMock
-from Registry.Registry import RegSZ
 import pytest
+from Registry.Registry import RegSZ
 
 from regrippy.plugins.mstscmru import Plugin as plugin
+
+from .reg_mock import (LoggerMock, RegistryKeyMock, RegistryMock,
+                       RegistryValueMock)
+
 
 @pytest.fixture
 def mock_reg():
@@ -23,6 +26,6 @@ def test_mndmru(mock_reg):
 
     results = list(p.run())
 
-    assert(len(results) == 2), "There should be 2 results"
-    assert(results[0].value_data == "127.0.0.1"), "First result should be '127.0.0.1'"
-    assert(results[1].value_data == "10.0.0.1"), "Second result should be '10.0.0.1'"
+    assert len(results) == 2, "There should be 2 results"
+    assert results[0].value_data == "127.0.0.1", "First result should be '127.0.0.1'"
+    assert results[1].value_data == "10.0.0.1", "Second result should be '10.0.0.1'"
