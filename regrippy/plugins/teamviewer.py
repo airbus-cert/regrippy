@@ -12,19 +12,32 @@ class Plugin(BasePlugin):
         path = r"TeamViewer"
 
         k = self.open_key(path)
-        if not k:
-            return
+        if k:
+            yield from self.process_key(k)
 
+        k = self.open_key("Wow6432Node\\" + path)
+        if k:
+            yield from self.process_key(k)
+
+    def process_key(self, k):
         r = PluginResult(key=k)
+
+        values = [x.name() for x in k.values()]
 
         r.custom = {
             "AlwaysOnline": k.value("Always_Online").value() == 1,
             "ClientID": k.value("ClientID").value(),
-            "LastStartupTime": k.value("LastStartupTime"),
+            "LastStartupTime": k.value("LastStartupTime")
+            if "LastStartupTime" in values
+            else -1,
+            "Version": k.value("Version").value(),
         }
         yield r
 
     def display_human(self, r):
+        if "wow6432node" in r.path.lower():
+            print("[32-bit application]")
+
         print(f"Always Online: {r.custom['AlwaysOnline']}")
         print(f"Client ID: {r.custom['ClientID']}")
         print(
