@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>RegRip.py standard classes &#8212; RegRippy 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="prev" title="Writing tests for your plugins" href="../testing/" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../testing/" title="Writing tests for your plugins"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../">RegRippy 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">RegRip.py standard classes</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="regrip-py-standard-classes">
+<h1>RegRip.py standard classes<a class="headerlink" href="#regrip-py-standard-classes" title="Permalink to this headline">¶</a></h1>
+<p>Before executing a plugin, the following objects are inserted into the global namespace.
+Please refer to <a class="reference internal" href="../createplugin/"><span class="doc">Creating a plugin</span></a> to learn how to develop a plugin yourself.</p>
+<p>When using these objects from inside your plugin, do not specify the <cite>regrip.</cite> module, as
+these objects are directly injected, bypassing any import.</p>
+<span class="target" id="module-regrippy"></span><dl class="py class">
+<dt class="sig sig-object py" id="regrippy.BasePlugin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">regrippy.</span></span><span class="sig-name descname"><span class="pre">BasePlugin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hive_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hive_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/regrippy/#BasePlugin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#regrippy.BasePlugin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for all plugins. Provides several methods that can be used by plugins
+to perform common actions, like opening registry keys.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>__REGHIVE__</strong> (<em>str_or_list</em>) – The registry hive (or list thereof) you plugin works on</p></li>
+<li><p><strong>reg</strong> (<em>Registry.Registry</em>) – a handle to a Registry hive</p></li>
+<li><p><strong>logger</strong> (<em>logging.Logger</em>) – a preconfigured Logger. Use the <a class="reference internal" href="#regrippy.BasePlugin.info" title="regrippy.BasePlugin.info"><code class="xref py py-func docutils literal notranslate"><span class="pre">info()</span></code></a>, <a class="reference internal" href="#regrippy.BasePlugin.warning" title="regrippy.BasePlugin.warning"><code class="xref py py-func docutils literal notranslate"><span class="pre">warning()</span></code></a> and <a class="reference internal" href="#regrippy.BasePlugin.error" title="regrippy.BasePlugin.error"><code class="xref py py-func docutils literal notranslate"><span class="pre">error()</span></code></a> methods instead.</p></li>
+<li><p><strong>hive_name</strong> (<em>str</em>) – the name of the hive. It will always be one of the values in <cite>__REGHIVE__</cite> (see <a class="reference internal" href="../createplugin/"><span class="doc">Creating a plugin</span></a>)</p></li>
+<li><p><strong>hive_path</strong> (<em>str</em>) – the full path to the hive file. Can be “-” if the hive was loaded from <cite>stdin</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="regrippy.BasePlugin.display_human">
+<span class="sig-name descname"><span class="pre">display_human</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/regrippy/#BasePlugin.display_human"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#regrippy.BasePlugin.display_human" title="Permalink to this definition">¶</a></dt>
+<dd><p>Displays a result to a human. By default,
+it display the path and value of the result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>result</strong> (<em>regrip.PluginResult</em>) – the result to display</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="regrippy.BasePlugin.display_machine">
+<span class="sig-name descname"><span class="pre">display_machine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/regrippy/#BasePlugin.display_machine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#regrippy.BasePlugin.display_machine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Displays a result for further processing by
+a machine (piping into mactime for example).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>result</strong> (<em>regrip.PluginResult</em>) – the result to display</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="regrippy.BasePlugin.error">
+<span class="sig-name descname"><span class="pre">error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/regrippy/#BasePlugin.error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#regrippy.BasePlugin.error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logs a message at ERROR level</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="regrippy.BasePlugin.get_currentcontrolset_path">
+<span class="sig-name descname"><span class="pre">get_currentcontrolset_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/regrippy/#BasePlugin.get_currentcontrolset_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#regrippy.BasePlugin.get_currentcontrolset_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetches the path to CurrentControlSet</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the path to the <cite>CurrentControlSet</cite> key, or <cite>None</cite> if an error happened</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="regrippy.BasePlugin.guess_username">
+<span class="sig-name descname"><span class="pre">guess_username</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/regrippy/#BasePlugin.guess_username"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#regrippy.BasePlugin.guess_username" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tries to guess the user the current NTUSER.DAT hive corresponds to</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>default</strong> (<em>any type</em>) – what to return in case we couldn’t determine the user name</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the user name, or <cite>default</cite> if it wasn’t found</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="regrippy.BasePlugin.info">
+<span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/regrippy/#BasePlugin.info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#regrippy.BasePlugin.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logs a message at INFO level</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="regrippy.BasePlugin.open_key">
+<span class="sig-name descname"><span class="pre">open_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/regrippy/#BasePlugin.open_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#regrippy.BasePlugin.open_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens and returns a registry key</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – the full path to a registry key</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the key if it was found, otherwise <cite>None</cite></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Registry.RegistryKey</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="regrippy.BasePlugin.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/regrippy/#BasePlugin.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#regrippy.BasePlugin.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main entry point of the plugin</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="regrippy.BasePlugin.warning">
+<span class="sig-name descname"><span class="pre">warning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/regrippy/#BasePlugin.warning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#regrippy.BasePlugin.warning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logs a message at WARNING level</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="regrippy.PluginResult">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">regrippy.</span></span><span class="sig-name descname"><span class="pre">PluginResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/regrippy/#PluginResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#regrippy.PluginResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class which holds a single result of a plugin execution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>custom</strong> (<em>dict</em>) – a <cite>dict</cite> you can use to store custom data for your result</p></li>
+<li><p><strong>mtime</strong> (<em>int</em>) – the “last-modified” time. Automatically set if you pass the <cite>key</cite> parameter.</p></li>
+<li><p><strong>atime</strong> (<em>int</em>) – the “last-accessed” time.</p></li>
+<li><p><strong>ctime</strong> (<em>int</em>) – the “last-changed” time.</p></li>
+<li><p><strong>btime&quot;</strong> (<em>int</em>) – the “created” time.</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – complete path to the key. Automatically set if you pass the <cite>key</cite> parameter.</p></li>
+<li><p><strong>key_name</strong> (<em>str</em>) – last part of the key path. Automatically set if you pass the <cite>key</cite> parameter</p></li>
+<li><p><strong>value_type</strong> (<em>str</em>) – the value type</p></li>
+<li><p><strong>value_name</strong> (<em>str</em>) – the name of the Value</p></li>
+<li><p><strong>value_data</strong> – the actual value data. The variable type depends on the type of the value.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="regrippy.mactime">
+<span class="sig-prename descclassname"><span class="pre">regrippy.</span></span><span class="sig-name descname"><span class="pre">mactime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">md5</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode_as_string</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mtime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">btime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/regrippy/#mactime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#regrippy.mactime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Formats and returns a Bodyfile-format line.
+All parameters are optional</p>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="../testing/"
+                          title="previous chapter">Writing tests for your plugins</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../testing/" title="Writing tests for your plugins"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../">RegRippy 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">RegRip.py standard classes</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Airbus CERT.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Creating a plugin &#8212; RegRippy 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Writing tests for your plugins" href="../testing/" />
+    <link rel="prev" title="Plugin test coverage" href="../testcoverage/" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../testing/" title="Writing tests for your plugins"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../testcoverage/" title="Plugin test coverage"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../">RegRippy 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Creating a plugin</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="creating-a-plugin">
+<h1>Creating a plugin<a class="headerlink" href="#creating-a-plugin" title="Permalink to this headline">¶</a></h1>
+<p>A RegRippy plugin consists of one basic component:</p>
+<dl class="py data">
+<dt class="sig sig-object py" id="Plugin">
+<span class="sig-name descname"><span class="pre">Plugin</span></span><a class="headerlink" href="#Plugin" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class inheriting from <a class="reference internal" href="../regrip/#regrippy.BasePlugin" title="regrippy.BasePlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasePlugin</span></code></a> and implementing the
+<a class="reference internal" href="../regrip/#regrippy.BasePlugin.run" title="regrippy.BasePlugin.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run()</span></code></a> method. It should either return a <cite>list</cite> of
+<a class="reference internal" href="../regrip/#regrippy.PluginResult" title="regrippy.PluginResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">PluginResult</span></code></a> or <cite>yield</cite> them.</p>
+<p>This class needs to have a <code class="xref py py-data docutils literal notranslate"><span class="pre">__REGHIVE__</span></code> class-level attribute
+specifying whichi hive(s) your plugin uses.</p>
+<p>Do not hesitate to override the <a class="reference internal" href="../regrip/#regrippy.BasePlugin.display_human" title="regrippy.BasePlugin.display_human"><code class="xref py py-meth docutils literal notranslate"><span class="pre">display_human()</span></code></a> and
+<a class="reference internal" href="../regrip/#regrippy.BasePlugin.display_machine" title="regrippy.BasePlugin.display_machine"><code class="xref py py-meth docutils literal notranslate"><span class="pre">display_machine()</span></code></a> methods if they do not fit your needs.</p>
+</dd></dl>
+
+<p>As an example, here is the <cite>run.py</cite> plugin, which lists programs running at startup.
+It is especially interesting because it has a different behaviour depending on the hive it is
+currently analysing.</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">run.py</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">regrippy</span> <span class="kn">import</span> <span class="n">BasePlugin</span><span class="p">,</span> <span class="n">PluginResult</span><span class="p">,</span> <span class="n">mactime</span>
+
+
+<span class="k">class</span> <span class="nc">Plugin</span><span class="p">(</span><span class="n">BasePlugin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reads startup programs from various hives&quot;&quot;&quot;</span>
+
+    <span class="n">__REGHIVE__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;NTUSER.DAT&quot;</span><span class="p">,</span> <span class="s2">&quot;SOFTWARE&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hive_name</span> <span class="o">==</span> <span class="s2">&quot;NTUSER.DAT&quot;</span><span class="p">:</span>
+            <span class="n">paths</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="sa">r</span><span class="s2">&quot;Software\Microsoft\Windows\CurrentVersion\Run&quot;</span><span class="p">,</span>
+                <span class="sa">r</span><span class="s2">&quot;Software\Microsoft\Windows\CurrentVersion\RunOnce&quot;</span><span class="p">,</span>
+                <span class="sa">r</span><span class="s2">&quot;Software\Microsoft\Windows NT\CurrentVersion\Windows\Run&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># SOFTWARE</span>
+            <span class="n">paths</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="sa">r</span><span class="s2">&quot;Microsoft\Windows\CurrentVersion\Run&quot;</span><span class="p">,</span>
+                <span class="sa">r</span><span class="s2">&quot;Microsoft\Windows\CurrentVersion\RunOnce&quot;</span><span class="p">,</span>
+                <span class="sa">r</span><span class="s2">&quot;Microsoft\Windows\CurrentVersion\Policies\Explorer\Run&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">open_key</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">key</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">PluginResult</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">v</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="nf">display_human</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">value_name</span><span class="p">,</span> <span class="s2">&quot;//&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">value_data</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">display_machine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="n">mactime</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">value_name</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">value_data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">mtime</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">mtime</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="../testcoverage/"
+                          title="previous chapter">Plugin test coverage</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="../testing/"
+                          title="next chapter">Writing tests for your plugins</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../testing/" title="Writing tests for your plugins"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../testcoverage/" title="Plugin test coverage"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../">RegRippy 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Creating a plugin</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Airbus CERT.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>

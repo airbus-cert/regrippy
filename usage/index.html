@@ -1,40 +1,42 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Using RegRippy for Incident Response &#8212; RegRippy 0.1 documentation</title>
-    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
     
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
     
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Plugin test coverage" href="testcoverage.html" />
-    <link rel="prev" title="Welcome to RegRippy’s documentation!" href="index.html" /> 
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Plugin test coverage" href="../testcoverage/" />
+    <link rel="prev" title="Welcome to RegRippy’s documentation!" href="../" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
+          <a href="../genindex/" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
+          <a href="../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="testcoverage.html" title="Plugin test coverage"
+          <a href="../testcoverage/" title="Plugin test coverage"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Welcome to RegRippy’s documentation!"
+          <a href="../" title="Welcome to RegRippy’s documentation!"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">RegRippy 0.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../">RegRippy 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Using RegRippy for Incident Response</a></li> 
       </ul>
     </div>  
 
@@ -43,7 +45,7 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="using-regrippy-for-incident-response">
+  <section id="using-regrippy-for-incident-response">
 <h1>Using RegRippy for Incident Response<a class="headerlink" href="#using-regrippy-for-incident-response" title="Permalink to this headline">¶</a></h1>
 <p>RegRippy’s focus is ease-of-use during incident response scenarios. Its goal is to get out of
 of the way as much as possible, and to provide you with the answers you need right away whenever
@@ -55,7 +57,7 @@ also work on a single isolated hive file.</p></li>
 <li><p>You will have to choose <strong>which plugin</strong> you want to run. Depending on the plugin, the hive you
 need can be different.</p></li>
 </ul>
-<div class="section" id="choosing-the-plugin">
+<section id="choosing-the-plugin">
 <h2>Choosing the plugin<a class="headerlink" href="#choosing-the-plugin" title="Permalink to this headline">¶</a></h2>
 <p>You can get a look at every plugin available in RegRippy by running:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ regrip.py -l
@@ -73,8 +75,8 @@ one-line description of what this plugin does.</p>
 $ reg_pluginname <span class="o">[</span>options<span class="o">]</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="selecting-the-hive">
+</section>
+<section id="selecting-the-hive">
 <h2>Selecting the hive<a class="headerlink" href="#selecting-the-hive" title="Permalink to this headline">¶</a></h2>
 <p>Before the plugin can do its magic, you need to specify where your hive file(s) is located.
 There are three ways you can do this (and they will be checked in this order):</p>
@@ -113,8 +115,21 @@ use RegRippy</strong></p></li>
 </pre></div>
 </div>
 </div></blockquote>
+<ol class="arabic simple" start="4">
+<li><p>If analysing a Windows Vista or later system, you can also add the <code class="docutils literal notranslate"><span class="pre">--backups</span></code> flag to
+automatically apply the plugin to
+<a class="reference external" href="https://www.fireeye.com/blog/threat-research/2019/01/digging-up-the-past-windows-registry-forensics-revisited.html">registry backups</a>.
+RegRippy will look into the following folders for backup hives:</p></li>
+</ol>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">:</span>\<span class="n">Windows</span>\<span class="n">System32</span>\<span class="n">config</span>\<span class="n">RegBack</span>\
+<span class="o">%</span><span class="n">USERPROFILE</span><span class="o">%</span>\<span class="n">NTUSER</span><span class="o">.</span><span class="n">DAT</span><span class="o">.</span><span class="n">OLD</span>
+<span class="o">%</span><span class="n">USERPROFILE</span><span class="o">%</span>\<span class="n">AppData</span>\<span class="n">Local</span>\<span class="n">Microsoft</span>\<span class="n">Windows</span>\<span class="n">UsrClass</span><span class="o">.</span><span class="n">dat</span><span class="o">.</span><span class="n">old</span>
+</pre></div>
 </div>
-<div class="section" id="usage-examples">
+</div></blockquote>
+</section>
+<section id="usage-examples">
 <h2>Usage examples<a class="headerlink" href="#usage-examples" title="Permalink to this headline">¶</a></h2>
 <p>Quick findings: get the name of the computer you’re analysing</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ mount /dev/sdb1 /mnt/c
@@ -129,31 +144,36 @@ and per-user (<cite>NTUSER.DAT</cite> hive)</p>
 <span class="c1"># when something is found in NTUSER</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">Welcome to RegRippy’s documentation!</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="testcoverage.html"
-                        title="next chapter">Plugin test coverage</a></p>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="../"
+                          title="previous chapter">Welcome to RegRippy’s documentation!</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="../testcoverage/"
+                          title="next chapter">Plugin test coverage</a></p>
+  </div>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+    <form class="search" action="../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -162,23 +182,24 @@ and per-user (<cite>NTUSER.DAT</cite> hive)</p>
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
+          <a href="../genindex/" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
+          <a href="../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="testcoverage.html" title="Plugin test coverage"
+          <a href="../testcoverage/" title="Plugin test coverage"
              >next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Welcome to RegRippy’s documentation!"
+          <a href="../" title="Welcome to RegRippy’s documentation!"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">RegRippy 0.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../">RegRippy 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Using RegRippy for Incident Response</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, Airbus CERT.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

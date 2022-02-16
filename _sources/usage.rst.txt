@@ -75,6 +75,17 @@ There are three ways you can do this (and they will be checked in this order):
      export REG_NTUSER=/path/to/NTUSER.DAT
      export REG_USRCLASS=/path/to/UsrClass.DAT
 
+4. If analysing a Windows Vista or later system, you can also add the ``--backups`` flag to
+   automatically apply the plugin to
+   `registry backups <https://www.fireeye.com/blog/threat-research/2019/01/digging-up-the-past-windows-registry-forensics-revisited.html>`_.
+   RegRippy will look into the following folders for backup hives:
+
+  .. code-block::
+
+    C:\Windows\System32\config\RegBack\
+    %USERPROFILE%\NTUSER.DAT.OLD
+    %USERPROFILE%\AppData\Local\Microsoft\Windows\UsrClass.dat.old
+
 ==============
 Usage examples
 ==============

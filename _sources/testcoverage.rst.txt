@@ -8,32 +8,44 @@ strive for 100% coverage :-)
 To make this dream a reality, please attach a test file to your pull requests! This way, the 
 percentage at least won't go down.
 
-**Current percentage: 91%**
+**Current percentage: 85%**
 
 .. csv-table:: 
    :header: "Plugin name","Test status"
 
-   "portproxy",OK
+   "antivirus",OK
    "compname",OK
-   "sysinternals",OK
-   "recentdocs",OK
-   "version",OK
-   "uninstall",OK
-   "lastshutdown",OK
-   "services",OK
-   "timezone",OK
-   "shimcache",OK
-   "usersids",OK
-   "userassist",OK
-   "rdphint",OK
    "filedialogmru",OK
-   "runmru",OK
+   "gpo",MISSING
+   "kb",MISSING
+   "keyboard",OK
    "lastloggedon",OK
-   "typedurls",OK
-   "mndmru",OK
-   "systeminfo",OK
-   "srum",MISSING
-   "run",OK
+   "lastshutdown",OK
+   "localgroups",OK
    "localusers",OK
+   "mndmru",OK
+   "mstscmru",OK
+   "portproxy",OK
+   "printer_history",OK
+   "printer_ports",OK
+   "proxy",OK
+   "putty",OK
+   "rdphint",OK
+   "recentdocs",OK
    "regtime",MISSING
+   "run",OK
+   "runmru",OK
+   "services",OK
+   "shimcache",OK
+   "srum",MISSING
+   "sysinternals",OK
+   "systeminfo",OK
+   "tasks",OK
+   "teamviewer",MISSING
+   "timezone",OK
+   "typedurls",OK
+   "uninstall",OK
+   "userassist",OK
+   "usersids",OK
+   "version",OK
 
