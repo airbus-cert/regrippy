@@ -3,8 +3,7 @@ from Registry.Registry import RegSZ
 
 from regrippy.plugins.timezone import Plugin as plugin
 
-from .reg_mock import (LoggerMock, RegistryKeyMock, RegistryMock,
-                       RegistryValueMock)
+from .reg_mock import LoggerMock, RegistryKeyMock, RegistryMock, RegistryValueMock
 
 
 @pytest.fixture

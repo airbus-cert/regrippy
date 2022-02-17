@@ -3,8 +3,7 @@ from Registry.Registry import RegDWord
 
 from regrippy.plugins.printer_history import Plugin
 
-from .reg_mock import (LoggerMock, RegistryKeyMock, RegistryMock,
-                       RegistryValueMock)
+from .reg_mock import LoggerMock, RegistryKeyMock, RegistryMock, RegistryValueMock
 
 PRINTERS = [
     "Microsoft Print To PDF",

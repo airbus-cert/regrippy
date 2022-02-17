@@ -5,8 +5,7 @@ from Registry.Registry import RegBin, RegExpandSZ
 
 from regrippy.plugins.localgroups import Plugin as plugin
 
-from .reg_mock import (LoggerMock, RegistryKeyMock, RegistryMock,
-                       RegistryValueMock)
+from .reg_mock import LoggerMock, RegistryKeyMock, RegistryMock, RegistryValueMock
 
 
 @pytest.fixture

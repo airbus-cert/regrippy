@@ -18,12 +18,12 @@
 #
 # Identifies and parses Application Compatibility Shim Cache entries for forensic data.
 
-import struct
-import datetime
 import codecs
-from io import BytesIO
-from csv import writer
+import datetime
 import logging
+import struct
+from csv import writer
+from io import BytesIO
 
 logging.basicConfig()
 logger = logging.getLogger("shimcacheparser")

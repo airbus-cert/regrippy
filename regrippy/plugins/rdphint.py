@@ -1,5 +1,6 @@
-from regrippy import BasePlugin, PluginResult, mactime
 from Registry import Registry
+
+from regrippy import BasePlugin, PluginResult, mactime
 
 
 class Plugin(BasePlugin):

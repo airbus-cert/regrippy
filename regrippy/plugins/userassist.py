@@ -1,7 +1,8 @@
-from regrippy import BasePlugin, PluginResult, mactime
 import codecs
 import datetime
 import re
+
+from regrippy import BasePlugin, PluginResult, mactime
 
 GUIDS = [
     # Windows XP

@@ -3,8 +3,7 @@ from Registry.Registry import RegSZ
 
 from regrippy.plugins.printer_ports import Plugin
 
-from .reg_mock import (LoggerMock, RegistryKeyMock, RegistryMock,
-                       RegistryValueMock)
+from .reg_mock import LoggerMock, RegistryKeyMock, RegistryMock, RegistryValueMock
 
 PORTS = [
     "COM1:",

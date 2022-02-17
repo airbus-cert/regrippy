@@ -1,10 +1,20 @@
 import pkg_resources
-from Registry.Registry import (RegBigEndian, RegBin, RegDWord, RegExpandSZ,
-                               RegFullResourceDescriptor,
-                               RegistryKeyNotFoundException,
-                               RegistryValueNotFoundException, RegLink,
-                               RegMultiSZ, RegNone, RegQWord, RegResourceList,
-                               RegResourceRequirementsList, RegSZ)
+from Registry.Registry import (
+    RegBigEndian,
+    RegBin,
+    RegDWord,
+    RegExpandSZ,
+    RegFullResourceDescriptor,
+    RegistryKeyNotFoundException,
+    RegistryValueNotFoundException,
+    RegLink,
+    RegMultiSZ,
+    RegNone,
+    RegQWord,
+    RegResourceList,
+    RegResourceRequirementsList,
+    RegSZ,
+)
 
 
 class LoggerMock(object):

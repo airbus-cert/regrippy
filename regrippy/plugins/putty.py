@@ -1,8 +1,9 @@
-from regrippy import BasePlugin, mactime, PluginResult
 from Registry.Registry import (
     RegistryKeyNotFoundException,
     RegistryValueNotFoundException,
 )
+
+from regrippy import BasePlugin, PluginResult, mactime
 
 
 class Plugin(BasePlugin):
