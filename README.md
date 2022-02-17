@@ -51,7 +51,8 @@ $ reg_compname -r /mnt/c/
 ```
 usage: regrip.py [-h] [--system SYSTEM] [--software SOFTWARE] [--sam SAM]
                  [--ntuser NTUSER] [--usrclass USRCLASS] [--root ROOT]
-                 [--all-user-hives] [--verbose] [--pipe] [--list]
+                 [--all-user-hives] [--backups] [--verbose] [--bodyfile]
+                 [--list]
                  plugin_name
 
 Extract information from Windows Registry hives
@@ -75,12 +76,15 @@ optional arguments:
   --usrclass USRCLASS, -u USRCLASS
                         Path to the UsrClass.DAT hive. Overrides the
                         REG_USRCLASS environment variable
-  --root ROOT, -r ROOT  Path to the C: folder.
+  --root ROOT, -r ROOT  Path to the C: folder. Overrides the REG_ROOT
+                        environment variable
   --all-user-hives      Work on all NTUSER.DAT and USRCLASS.DAT hives if
                         required. Requires --root. Overrides --ntuser and
                         --usrclass.
+  --backups             Run the plugin on backup registry hives as well (does
+                        not work for hives loaded from stdin)
   --verbose, -v         Be more verbose
-  --pipe, -p            Force output in pipe format
+  --bodyfile, -b        Force output in Bodyfile format
   --list, -l            List available plugins
 ```
 
