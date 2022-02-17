@@ -78,6 +78,7 @@ class RegistryKeyMock(object):
         self._values = []
         self._parent = parent
 
+    @staticmethod
     def build(path):
         before, _, last = path.rpartition("\\")
         if not before:
