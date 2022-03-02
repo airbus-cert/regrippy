@@ -23,7 +23,10 @@ def mactime(
     return "|".join(
         [
             md5,
-            name,
+            # remove newlines from the name. There are cases where newlines
+            # occur in registry key names, but their occurance breaks the
+            # bodyfile format, so we escape them here
+            name.replace("\n", "\\n").replace("\r", "\\r"),
             str(inode),
             mode_as_string,
             str(uid),
