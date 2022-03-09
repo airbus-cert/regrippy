@@ -98,10 +98,10 @@ class RegistryAction(object):
     @staticmethod
     def from_binary(binary):
         name_len = int.from_bytes(binary[2:6], byteorder="little")
-        name = binary[6 : 6 + name_len].decode("utf-16-le")
+        name = binary[6 : 6 + name_len].decode("utf-16-le", errors="backslashreplace")
 
         offset = 6 + name_len
-        action_type = binary[offset : offset + 2].decode("ascii")
+        action_type = binary[offset : offset + 2].decode("ascii", errors="backslashreplace")
         cmd = None
         offset += 2
 
@@ -109,13 +109,13 @@ class RegistryAction(object):
             offset += 4
             cmd_len = int.from_bytes(binary[offset : offset + 4], byteorder="little")
             offset += 4
-            cmd = binary[offset : offset + cmd_len].decode("utf-16-le")
+            cmd = binary[offset : offset + cmd_len].decode("utf-16-le", errors="backslashreplace")
 
             offset += cmd_len
             args_len = int.from_bytes(binary[offset : offset + 4], byteorder="little")
             if args_len > 0:
                 offset += 4
-                args = binary[offset : offset + args_len].decode("utf-16-le")
+                args = binary[offset : offset + args_len].decode("utf-16-le", errors="backslashreplace")
                 cmd += " " + args
 
         return RegistryAction(name, cmd)
