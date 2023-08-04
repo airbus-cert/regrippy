@@ -96,6 +96,22 @@ def get_hive_paths(args, hive_name):
             if regback:
                 result.append(regback)
         return result
+    elif hive_name.lower() == "security":
+        print('security' )
+        path = first(
+            args.security,
+            find_path_nocase(args.root, ["windows", "system32", "config", "security"])
+            if args.root
+            else None,
+            os.getenv("REG_SECURITY"),
+        )
+        result = [path] if path else None
+        if args.backups and path:
+            parent = os.path.dirname(path)
+            regback = find_path_nocase(parent, ["regback", "security"])
+            if regback:
+                result.append(regback)
+        return result
     elif hive_name.lower() == "ntuser.dat" and not args.all_user_hives:
         path = first(args.ntuser, os.getenv("REG_NTUSER"))
         result = [path] if path else None
@@ -166,7 +182,7 @@ def get_hive_paths(args, hive_name):
 
     elif hive_name.lower() == "all":
         hive_paths = []
-        for hive in ["system", "software", "sam", "ntuser.dat", "usrclass.dat"]:
+        for hive in ["system", "software", "sam", "security", "ntuser.dat", "usrclass.dat"]:
             paths = get_hive_paths(args, hive)
             if paths:
                 hive_paths.extend(paths)
@@ -204,6 +220,13 @@ def main():
         description="Extract information from Windows Registry hives"
     )
 
+    parser.add_argument(
+        "--security",
+        "-e",
+        help="Path to the SECURITY hive. Overrides --root and the REG_SECURITY environment variable",
+        type=str,
+        default="",
+    )
     parser.add_argument(
         "--system",
         "-y",
