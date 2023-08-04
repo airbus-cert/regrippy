@@ -97,7 +97,6 @@ def get_hive_paths(args, hive_name):
                 result.append(regback)
         return result
     elif hive_name.lower() == "security":
-        print('security' )
         path = first(
             args.security,
             find_path_nocase(args.root, ["windows", "system32", "config", "security"])
