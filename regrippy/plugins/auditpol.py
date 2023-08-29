@@ -106,7 +106,7 @@ POL['Account Logon'] = [
 LOGTYPES = {0: 'No Auditing', 1: 'Success', 2: 'Failure', 3: 'Success/Failure'}
 
 class Plugin(BasePlugin):
-    """Get the Adv audit policy"""
+    """Get the advanced security audit policy settings"""
 
     __REGHIVE__ = "SECURITY"
 
