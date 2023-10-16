@@ -97,25 +97,56 @@ class RegistryAction(object):
 
     @staticmethod
     def from_binary(binary):
-        name_len = int.from_bytes(binary[2:6], byteorder="little")
-        name = binary[6 : 6 + name_len].decode("utf-16-le")
+        # First two bytes seem to be some kind of version header
+        # - 3: enriched information with user + action
+        # - 1: base information with action only
+        # whichever the version somewhere later in the structure the following two-byte pattern
+        # appears:
+        # - 0x66 0x66 (in ASCII "ff"): task runs an executable
+        # - 0x77 0x77 (in ASCII "ww"): task performs some other action
+        struct_version = int.from_bytes(binary[0:2], byteorder="little")
 
-        offset = 6 + name_len
-        action_type = binary[offset : offset + 2].decode("ascii")
-        cmd = None
-        offset += 2
+        if struct_version == 1:
+            # struct:
+            # - 2 bytes: little-endian version header
+            # - 2 bytes: action flag ("ff" or "ww")
+            action_type = binary[2:4].decode("ascii")
+            if action_type == "ff":
+                # struct for "ff" action flag:
+                # - 4 bytes: apparently always 0
+                # - 4 bytes: unknown; looks like a little-endian int
+                # - n bytes: utf-16-le string
+                # - 4 bytes: zero padding
+                cmd = binary[12:-4].decode("utf-16-le")
+                return RegistryAction("", cmd)
+            # if action_type == "ww": # currently not parsed
 
-        if action_type == "ff":
-            offset += 4
-            cmd_len = int.from_bytes(binary[offset : offset + 4], byteorder="little")
-            offset += 4
-            cmd = binary[offset : offset + cmd_len].decode("utf-16-le")
+        if struct_version == 3:
+            name_len = int.from_bytes(binary[2:6], byteorder="little")
+            name = binary[6 : 6 + name_len].decode("utf-16-le")
 
-            offset += cmd_len
-            args_len = int.from_bytes(binary[offset : offset + 4], byteorder="little")
-            if args_len > 0:
+            offset = 6 + name_len
+            action_type = binary[offset : offset + 2].decode("ascii")
+            cmd = None
+            offset += 2
+
+            if action_type == "ff":
                 offset += 4
-                args = binary[offset : offset + args_len].decode("utf-16-le")
-                cmd += " " + args
+                cmd_len = int.from_bytes(
+                    binary[offset : offset + 4], byteorder="little"
+                )
+                offset += 4
+                cmd = binary[offset : offset + cmd_len].decode("utf-16-le")
 
-        return RegistryAction(name, cmd)
+                offset += cmd_len
+                args_len = int.from_bytes(
+                    binary[offset : offset + 4], byteorder="little"
+                )
+                if args_len > 0:
+                    offset += 4
+                    args = binary[offset : offset + args_len].decode("utf-16-le")
+                    cmd += " " + args
+
+            return RegistryAction(name, cmd)
+
+        return RegistryAction("REGRIPPY_UNSUPPORTED", "REGRIPPY_UNSUPPORTED")
