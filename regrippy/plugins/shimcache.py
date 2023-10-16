@@ -20,8 +20,11 @@ class Plugin(BasePlugin):
 
         if not key:
             return
+        read_cache_results = read_cache(key.value("AppCompatCache").value())
+        if not read_cache_results:
+            return
 
-        for entry in read_cache(key.value("AppCompatCache").value()):
+        for entry in read_cache_results:
             res = PluginResult(key=key, value=None)
             res.custom["date"] = entry[0]
             if type(entry[2]) == bytes:
