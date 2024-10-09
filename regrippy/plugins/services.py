@@ -27,6 +27,9 @@ class Plugin(BasePlugin):
                 "description": service.value("Description").value()
                 if "Description" in values
                 else "N/A",
+                "account": service.value("ObjectName").value()
+                if "ObjectName" in values
+                else "LocalSystem",
             }
             yield res
 
@@ -35,6 +38,7 @@ class Plugin(BasePlugin):
         print(f"\tDescription: {result.custom['description']}")
         print(f"\tImagePath: {result.custom['image_path']}")
         print(f"\tStart: {result.custom['start_mode']}")
+        print(f"\tAccount: {result.custom['account']}")
         print()
 
     def display_machine(self, result):
