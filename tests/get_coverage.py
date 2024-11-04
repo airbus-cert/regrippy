@@ -3,8 +3,6 @@
 import os
 import sys
 
-import pkg_resources
-
 RST_TEMPLATE = """
 Plugin test coverage
 ====================

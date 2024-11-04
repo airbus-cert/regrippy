@@ -5,7 +5,7 @@ import logging
 import os
 import sys
 
-import pkg_resources
+import importlib 
 from Registry import Registry
 
 logging.basicConfig()
@@ -191,15 +191,28 @@ def get_hive_paths(args, hive_name):
 
 
 def list_plugins():
-    for ep in pkg_resources.iter_entry_points(group="plugins"):
-        plugin = ep.load()
-        print(f"- {ep.name}({plugin.__REGHIVE__}): {plugin.__doc__}")
+    for f in importlib.resources.files("regrippy.plugins").iterdir():
+        filename = os.path.basename(f)
+        mod_name = filename[:-len(".py")]
+        if mod_name.startswith("__"):
+            continue
+        
+        mod = importlib.import_module(f"regrippy.plugins.{mod_name}")
+        p = mod.Plugin
+        print(f"- {mod_name}({p.__REGHIVE__}): {p.__doc__}")
 
 
 def load_plugin(plugin_name):
-    for ep in pkg_resources.iter_entry_points(group="plugins"):
-        if ep.name == plugin_name:
-            return ep.load()
+    for f in importlib.resources.files("regrippy.plugins").iterdir():
+        filename = os.path.basename(f)
+        mod_name = filename[:-len(".py")]
+        if mod_name.startswith("__"):
+            continue
+        
+        if mod_name == plugin_name:
+            mod = importlib.import_module(f"regrippy.plugins.{mod_name}")
+            p = mod.Plugin
+            return p
 
     raise ValueError(f"No such plugin: {plugin_name}")
 

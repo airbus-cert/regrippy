@@ -45,7 +45,7 @@ All plugins should also support both a human-readable and machine-readable outpu
     author="Airbus CERT",
     author_email="cert@airbus.com",
     url="https://github.com/airbus-cert/regrippy",
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     packages=["regrippy", "regrippy.plugins", "regrippy.thirdparty"],
     classifiers=[
         "Programming Language :: Python",
