@@ -39,6 +39,7 @@ class Plugin(BasePlugin):
         print(f"\tImagePath: {result.custom['image_path']}")
         print(f"\tStart: {result.custom['start_mode']}")
         print(f"\tAccount: {result.custom['account']}")
+        print(f"\tLastChange: {result.mtime}")
         print()
 
     def display_machine(self, result):
