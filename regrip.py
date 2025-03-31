@@ -4,8 +4,9 @@ import argparse
 import logging
 import os
 import sys
+import importlib
 
-import importlib 
+import importlib_resources
 from Registry import Registry
 
 logging.basicConfig()
@@ -191,7 +192,7 @@ def get_hive_paths(args, hive_name):
 
 
 def list_plugins():
-    for f in importlib.resources.files("regrippy.plugins").iterdir():
+    for f in importlib_resources.files("regrippy.plugins").iterdir():
         filename = os.path.basename(f)
         mod_name = filename[:-len(".py")]
         if mod_name.startswith("__"):
@@ -203,7 +204,7 @@ def list_plugins():
 
 
 def load_plugin(plugin_name):
-    for f in importlib.resources.files("regrippy.plugins").iterdir():
+    for f in importlib_resources.files("regrippy.plugins").iterdir():
         filename = os.path.basename(f)
         mod_name = filename[:-len(".py")]
         if mod_name.startswith("__"):

@@ -30,7 +30,7 @@ def generate_entry_points():
 
 setup(
     name="regrippy",
-    version="2.0.1",
+    version="2.0.2",
     description="A modern Python-3-based alternative to RegRipper",
     long_description="""RegRip**py** is a framework for reading and extracting useful forensics data from Windows registry hives. It is an alternative to [RegRipper](https://github.com/keydet89/RegRipper2.8) developed in modern Python 3. It makes use of William Ballenthin's [python-registry](https://github.com/williballenthin/python-registry) to access the raw registry hives.
 
@@ -58,6 +58,6 @@ All plugins should also support both a human-readable and machine-readable outpu
         "Intended Audience :: Information Technology",
     ],
     scripts=["regrip.py"],
-    install_requires=["wheel", "python-registry > 1.1.0"],
+    install_requires=["wheel", "python-registry > 1.1.0", "importlib_resources"],
     entry_points=generate_entry_points(),
 )
