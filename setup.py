@@ -30,7 +30,7 @@ def generate_entry_points():
 
 setup(
     name="regrippy",
-    version="2.0.0",
+    version="2.0.1",
     description="A modern Python-3-based alternative to RegRipper",
     long_description="""RegRip**py** is a framework for reading and extracting useful forensics data from Windows registry hives. It is an alternative to [RegRipper](https://github.com/keydet89/RegRipper2.8) developed in modern Python 3. It makes use of William Ballenthin's [python-registry](https://github.com/williballenthin/python-registry) to access the raw registry hives.
 
