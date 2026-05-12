@@ -108,7 +108,7 @@ $ tox -e py37
 
 ## Credits
 
-- This project is under copyright of the [Airbus Computer Emergency Response Team (CERT)](https://www.trusted-introducer.org/directory/teams/ai-cert.html) and distributed under the [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0) license
+- This project is under copyright of the [Airbus Computer Emergency Response Team (CERT)](https://www.trusted-introducer.org/trusted-introducer/directory/teams/ai-cert-fr/) and distributed under the [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0) license
 - [keydet89](https://github.com/keydet89) for his [RegRipper](https://github.com/keydet89/RegRipper2.8) project which was a great inspiration
 - [Willi Ballenthin](http://www.williballenthin.com/) for his [python-registry](https://github.com/williballenthin/python-registry) framework
 
