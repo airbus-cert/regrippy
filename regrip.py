@@ -4,9 +4,9 @@ import argparse
 import logging
 import os
 import sys
-import importlib
 
-import importlib_resources
+import importlib
+from importlib import resources as importlib_resources
 from Registry import Registry
 
 logging.basicConfig()
