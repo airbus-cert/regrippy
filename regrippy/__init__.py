@@ -90,7 +90,7 @@ class BasePlugin(object):
             return None
 
         current = select_key.value("Current").value()
-        ccs_keyname = "ControlSet00" + str(current)
+        ccs_keyname = f"ControlSet{current:03d}"
 
         return ccs_keyname
 
